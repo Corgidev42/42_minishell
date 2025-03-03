@@ -53,8 +53,8 @@ Gestion des signaux
 	•	kill : Envoie un signal à un processus.
 
 Gestion des fichiers et répertoires
-	•	**getcwd : Récupère le répertoire de travail actuel.**
-	•	**chdir : Change le répertoire de travail actuel.**
+	•	**getcwd : Récupère le répertoire de travail actuel.
+	•	**chdir : Change le répertoire de travail actuel.
 	•	stat : Récupère des informations sur un fichier.
 	•	lstat : Similaire à stat, mais fonctionne avec les liens symboliques.
 	•	fstat : Similaire à stat, mais fonctionne avec un descripteur de fichier.
@@ -77,7 +77,7 @@ Contrôle du terminal
 	•	ioctl : Envoie une commande de contrôle à un périphérique.
 
 Gestion des variables d’environnement
-	•	getenv : Récupère la valeur d’une variable d’environnement.
+	•	**getenv : Récupère la valeur d’une variable d’environnement.
 
 Contrôle du terminal (suite)
 	•	tcsetattr : Modifie les attributs d’un terminal.
