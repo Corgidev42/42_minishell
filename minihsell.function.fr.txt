@@ -1,16 +1,16 @@
 Voici une explication de toutes les fonctions externes que tu peux utiliser dans ton projet Minishell :
 
 Fonctions liées à readline (Gestion de l’entrée utilisateur)
-	•	readline : Lit une ligne de commande entrée par l’utilisateur avec édition et historique.
-	•	rl_clear_history : Efface l’historique des commandes enregistrées.
+	•	**readline : Lit une ligne de commande entrée par l’utilisateur avec édition et historique.
+	•	**rl_clear_history : Efface l’historique des commandes enregistrées.
 	•	rl_on_new_line : Informe readline qu’une nouvelle ligne commence.
 	•	rl_replace_line : Remplace la ligne actuelle dans le buffer de readline.
 	•	rl_redisplay : Redessine la ligne actuelle à l’écran.
-	•	add_history : Ajoute une commande à l’historique.
+	•	**add_history : Ajoute une commande à l’historique.
 
 Gestion de la mémoire
-	•	malloc : Alloue dynamiquement un bloc de mémoire.
-	•	free : Libère un bloc de mémoire précédemment alloué.
+	•	**malloc : Alloue dynamiquement un bloc de mémoire.
+	•	**free : Libère un bloc de mémoire précédemment alloué.
 
 Gestion des entrées/sorties (I/O)
 	•	write : Écrit des données dans un fichier ou sur la sortie standard.
