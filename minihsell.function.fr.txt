@@ -46,11 +46,13 @@ Gestion des signaux
 	•	$? doit contenir le code de retour du dernier processus exécuté.
 	•	Si un processus est interrompu par un signal, son code de retour doit refléter cela.
 📌 Fonctions
-	•	signal : Définit un gestionnaire de signal.
-	•	sigaction : Définit une action spécifique pour un signal.
-	•	sigemptyset : Initialise un ensemble de signaux vide.
-	•	sigaddset : Ajoute un signal à un ensemble de signaux.
-	•	kill : Envoie un signal à un processus.
+	•	**signal : Définit un gestionnaire de signal.
+		--- OU ---
+	•	**sigaction : Définit une action spécifique pour un signal.
+	•	**sigemptyset : Initialise un ensemble de signaux vide.
+	•	**sigaddset : Ajoute un signal à un ensemble de signaux.
+
+	•	**kill : Envoie un signal à un processus.
 
 Gestion des fichiers et répertoires
 	•	**getcwd : Récupère le répertoire de travail actuel.**
