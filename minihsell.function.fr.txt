@@ -1,0 +1,87 @@
+Voici une explication de toutes les fonctions externes que tu peux utiliser dans ton projet Minishell :
+
+Fonctions liées à readline (Gestion de l’entrée utilisateur)
+	•	readline : Lit une ligne de commande entrée par l’utilisateur avec édition et historique.
+	•	rl_clear_history : Efface l’historique des commandes enregistrées.
+	•	rl_on_new_line : Informe readline qu’une nouvelle ligne commence.
+	•	rl_replace_line : Remplace la ligne actuelle dans le buffer de readline.
+	•	rl_redisplay : Redessine la ligne actuelle à l’écran.
+	•	add_history : Ajoute une commande à l’historique.
+
+Gestion de la mémoire
+	•	malloc : Alloue dynamiquement un bloc de mémoire.
+	•	free : Libère un bloc de mémoire précédemment alloué.
+
+Gestion des entrées/sorties (I/O)
+	•	write : Écrit des données dans un fichier ou sur la sortie standard.
+	•	access : Vérifie l’existence et les permissions d’un fichier.
+	•	open : Ouvre un fichier et retourne un descripteur de fichier.
+	•	read : Lit des données depuis un fichier ou l’entrée standard.
+	•	close : Ferme un descripteur de fichier.
+	•	dup : Duplique un descripteur de fichier.
+	•	dup2 : Duplique un descripteur de fichier en le redirigeant vers un autre.
+
+Gestion des processus
+	•	fork : Crée un nouveau processus enfant.
+	•	wait : Attend la fin d’un processus enfant.
+	•	waitpid : Attend la fin d’un processus spécifique.
+	•	wait3 : Attend un processus enfant et récupère des informations supplémentaires.
+	•	wait4 : Similaire à wait3, avec plus de contrôle sur les signaux.
+
+Gestion des signaux
+	•	signal : Définit un gestionnaire de signal.
+	•	sigaction : Définit une action spécifique pour un signal.
+	•	sigemptyset : Initialise un ensemble de signaux vide.
+	•	sigaddset : Ajoute un signal à un ensemble de signaux.
+	•	kill : Envoie un signal à un processus.
+
+Gestion des fichiers et répertoires
+	•	getcwd : Récupère le répertoire de travail actuel.
+	•	chdir : Change le répertoire de travail actuel.
+	•	stat : Récupère des informations sur un fichier.
+	•	lstat : Similaire à stat, mais fonctionne avec les liens symboliques.
+	•	fstat : Similaire à stat, mais fonctionne avec un descripteur de fichier.
+	•	unlink : Supprime un fichier.
+	•	opendir : Ouvre un répertoire.
+	•	readdir : Lit une entrée dans un répertoire.
+	•	closedir : Ferme un répertoire.
+
+Exécution de programmes
+	•	execve : Remplace le processus en cours par un nouveau programme.
+
+Gestion des erreurs
+	•	strerror : Convertit un numéro d’erreur en message d’erreur.
+	•	perror : Affiche un message d’erreur basé sur la dernière erreur système.
+
+Contrôle du terminal
+	•	isatty : Vérifie si un descripteur de fichier est un terminal.
+	•	ttyname : Récupère le nom du terminal associé à un descripteur de fichier.
+	•	ttyslot : Récupère le numéro de slot du terminal.
+	•	ioctl : Envoie une commande de contrôle à un périphérique.
+
+Gestion des variables d’environnement
+	•	getenv : Récupère la valeur d’une variable d’environnement.
+
+Contrôle du terminal (suite)
+	•	tcsetattr : Modifie les attributs d’un terminal.
+	•	tcgetattr : Récupère les attributs d’un terminal.
+
+Gestion de la bibliothèque termcap (affichage dans le terminal)
+	•	tgetent : Charge une base de données termcap.
+	•	tgetflag : Récupère un drapeau (flag) termcap.
+	•	tgetnum : Récupère une valeur numérique termcap.
+	•	tgetstr : Récupère une chaîne termcap.
+	•	tgoto : Positionne le curseur dans le terminal.
+	•	tputs : Affiche une chaîne termcap.
+
+Résumé :
+	•	Entrée utilisateur & historique → readline et ses variantes
+	•	Mémoire → malloc, free
+	•	I/O (fichiers, entrées/sorties) → write, read, open, close, access
+	•	Gestion des processus → fork, execve, wait, waitpid
+	•	Signaux → signal, sigaction, kill
+	•	Fichiers & répertoires → stat, lstat, opendir, readdir
+	•	Erreurs → strerror, perror
+	•	Terminal → isatty, tcgetattr, tputs
+
+Si tu veux plus d’explications sur l’utilisation d’une de ces fonctions dans Minishell, dis-moi ! 🚀
