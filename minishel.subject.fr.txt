@@ -1,0 +1,98 @@
+Voici la traduction du sujet du projet Minishell en français :
+
+Minishell
+
+Aussi beau qu’un shell
+
+Résumé :
+
+Ce projet consiste à créer un shell simple.
+
+Oui, votre propre petit bash.
+Vous apprendrez beaucoup sur les processus et les descripteurs de fichiers.
+
+Version : 7.1
+
+Chapitre I - Introduction
+
+L’existence des shells est liée à l’existence même de l’informatique.
+
+À l’époque, tous les développeurs étaient d’accord pour dire que communiquer avec un ordinateur en utilisant des interrupteurs 1/0 alignés était sérieusement agaçant.
+
+Il était donc logique d’avoir l’idée de créer un logiciel permettant de communiquer avec un ordinateur à l’aide de lignes de commande interactives dans un langage quelque peu proche du langage humain.
+
+Grâce à Minishell, vous pourrez voyager dans le temps et revenir aux problèmes que rencontraient les gens avant l’existence de Windows.
+
+Chapitre II - Instructions générales
+	•	Votre projet doit être écrit en C.
+	•	Il doit être conforme à la Norminette. Les fichiers/fonctions bonus sont également soumis à cette norme et toute erreur entraînera une note de 0.
+	•	Vos fonctions ne doivent pas provoquer de plantages inattendus (segmentation fault, bus error, double free, etc.), sauf en cas de comportement indéfini. Sinon, votre projet sera considéré comme non fonctionnel et noté 0.
+	•	Toute mémoire allouée sur le tas (heap) doit être correctement libérée. Aucune fuite de mémoire ne sera tolérée.
+	•	Vous devez fournir un Makefile qui compile vos fichiers sources avec les options -Wall -Wextra -Werror, utilise cc et ne doit pas relinker.
+	•	Votre Makefile doit contenir au minimum les règles : $(NAME), all, clean, fclean et re.
+	•	Pour les bonus, une règle bonus doit être ajoutée au Makefile et les fichiers doivent être dans des fichiers distincts _bonus.{c/h}.
+	•	Si l’utilisation de votre libft est autorisée, elle doit être copiée dans un dossier libft avec son propre Makefile, et votre Makefile doit la compiler avant votre projet.
+	•	Il est recommandé de créer des programmes de test, bien que non requis pour la soumission. Ils seront utiles pour tester votre projet et celui de vos camarades lors des soutenances.
+	•	Vous devez soumettre votre travail dans le dépôt Git assigné. Seul le travail présent dans le dépôt sera évalué.
+Si votre projet est évalué par Deepthought, l’évaluation s’arrêtera à la première erreur.
+
+Chapitre III - Partie obligatoire
+
+Informations générales :
+	•	Nom du programme : minishell
+	•	Fichiers à rendre : Makefile, *.h, *.c
+	•	Makefile : Doit contenir les règles NAME, all, clean, fclean, re
+	•	Libft autorisée : Oui
+	•	Description : Écrire un shell
+
+Fonctionnalités attendues :
+
+Votre shell doit :
+	•	Afficher un prompt lorsqu’il attend une commande.
+	•	Gérer un historique des commandes.
+	•	Rechercher et exécuter les exécutables appropriés (via $PATH ou en utilisant un chemin absolu/relatif).
+	•	Éviter l’utilisation de variables globales, sauf pour indiquer un signal reçu.
+	•	Ne pas interpréter les guillemets non fermés ou certains caractères spéciaux non requis (ex. \, ;).
+	•	Gérer les quotes :
+	•	' (simple quote) : empêche l’interprétation des métacaractères.
+	•	" (double quote) : empêche l’interprétation sauf pour $.
+	•	Implémenter les redirections :
+	•	< : redirige l’entrée.
+	•	> : redirige la sortie.
+	•	<< : lit l’entrée jusqu’à un délimiteur.
+	•	>> : redirige la sortie en mode append.
+	•	Implémenter les pipes (|) : la sortie d’une commande devient l’entrée de la suivante.
+	•	Gérer les variables d’environnement ($VAR).
+	•	Gérer ?, qui doit contenir le code de sortie du dernier pipeline exécuté.
+	•	Gérer les signaux (ctrl-C, ctrl-D, ctrl-\) :
+	•	ctrl-C : affiche un nouveau prompt sur une nouvelle ligne.
+	•	ctrl-D : quitte le shell.
+	•	ctrl-\ : ne fait rien en mode interactif.
+	•	Implémenter les builtins suivants :
+	•	echo avec option -n
+	•	cd (avec un chemin relatif ou absolu)
+	•	pwd (sans option)
+	•	export (sans option)
+	•	unset (sans option)
+	•	env (sans option/argument)
+	•	exit (sans option)
+
+⚠️ Attention : La fonction readline() peut provoquer des fuites de mémoire. Vous n’avez pas à les corriger, mais votre propre code ne doit pas en avoir.
+
+💡 Conseil : Si un comportement n’est pas clairement défini, utilisez bash comme référence.
+
+Chapitre IV - Partie Bonus
+
+Si vous souhaitez aller plus loin, votre programme peut aussi :
+	•	Implémenter && et || avec gestion des priorités via des parenthèses.
+	•	Gérer les wildcards (*) pour le répertoire courant.
+
+⚠️ Important : La partie bonus ne sera évaluée que si la partie obligatoire est parfaite.
+“Parfaite” signifie que toutes les fonctionnalités demandées fonctionnent sans erreurs.
+
+Chapitre V - Soumission et évaluation par les pairs
+	•	Soumettez votre projet dans votre dépôt Git assigné.
+	•	Seul le contenu de ce dépôt sera évalué lors de la soutenance.
+	•	Vérifiez attentivement les noms de fichiers et leur conformité avec le sujet avant de rendre votre projet.
+
+Ceci est la traduction complète du sujet Minishell en français. 😊 Si tu veux des précisions sur une partie spécifique ou des conseils pour avancer dans le projet, n’hésite pas ! 🚀
