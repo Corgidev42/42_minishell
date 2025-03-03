@@ -22,8 +22,8 @@ Gestion des entrées/sorties (I/O)
 	•	**dup2 : Duplique un descripteur de fichier en le redirigeant vers un autre.
 
 Gestion des processus
-	•	fork : Crée un nouveau processus enfant.
-	•	wait : Attend la fin d’un processus enfant.
+	•	**fork : Crée un nouveau processus enfant.
+	•	**wait : Attend la fin d’un processus enfant.
 	•	waitpid : Attend la fin d’un processus spécifique.
 	•	wait3 : Attend un processus enfant et récupère des informations supplémentaires.
 	•	wait4 : Similaire à wait3, avec plus de contrôle sur les signaux.
@@ -64,7 +64,7 @@ Gestion des fichiers et répertoires
 	•	closedir : Ferme un répertoire.
 
 Exécution de programmes
-	•	execve : Remplace le processus en cours par un nouveau programme.
+	•	**execve : Remplace le processus en cours par un nouveau programme.
 
 Gestion des erreurs
 	•	strerror : Convertit un numéro d’erreur en message d’erreur.
