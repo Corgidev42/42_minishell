@@ -28,7 +28,7 @@ int	main()
 	// sigaction is used to change the action taken by a process on receipt of a specific signal.
 	sigaction(SIGINT, &act, NULL);
 	
-	signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, control_c_handler);
 	
 	int i = 5;
 	while (1)
