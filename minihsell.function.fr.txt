@@ -29,6 +29,23 @@ Gestion des processus
 	•	wait4 : Similaire à wait3, avec plus de contrôle sur les signaux.
 
 Gestion des signaux
+📌 Interruption de l’exécution
+	•	CTRL + C (SIGINT) :
+	•	Permet à l’utilisateur d’interrompre une commande en cours (comme cat ou sleep).
+	•	Le shell doit afficher un nouveau prompt au lieu de quitter complètement.
+	•	CTRL + D (EOF) :
+	•	Sert à fermer le shell proprement si l’utilisateur est en mode interactif.
+	•	CTRL + \ (SIGQUIT) :
+	•	Doit être ignoré dans bash, donc votre Minishell doit aussi le gérer.
+
+📌 Propagation des signaux aux processus fils
+	•	Lorsque Minishell exécute une commande (ex: sleep 10), elle est lancée dans un processus fils.
+	•	Si l’utilisateur fait CTRL + C, le signal doit être envoyé au bon processus, mais le shell ne doit pas être interrompu.
+
+📌 Récupérer le code de sortie des processus
+	•	$? doit contenir le code de retour du dernier processus exécuté.
+	•	Si un processus est interrompu par un signal, son code de retour doit refléter cela.
+📌 Fonctions
 	•	signal : Définit un gestionnaire de signal.
 	•	sigaction : Définit une action spécifique pour un signal.
 	•	sigemptyset : Initialise un ensemble de signaux vide.
@@ -84,4 +101,3 @@ Résumé :
 	•	Erreurs → strerror, perror
 	•	Terminal → isatty, tcgetattr, tputs
 
-Si tu veux plus d’explications sur l’utilisation d’une de ces fonctions dans Minishell, dis-moi ! 🚀

@@ -52,15 +52,236 @@ Votre shell doit :
 	•	Gérer un historique des commandes.
 	•	Rechercher et exécuter les exécutables appropriés (via $PATH ou en utilisant un chemin absolu/relatif).
 	•	Éviter l’utilisation de variables globales, sauf pour indiquer un signal reçu.
+____________________________________________________________________________________
 	•	Ne pas interpréter les guillemets non fermés ou certains caractères spéciaux non requis (ex. \, ;).
 	•	Gérer les quotes :
 	•	' (simple quote) : empêche l’interprétation des métacaractères.
 	•	" (double quote) : empêche l’interprétation sauf pour $.
+Les métacaractères sont des symboles qui ont une signification spéciale dans un shell. Ils ne sont pas interprétés comme de simples caractères, mais modifient le comportement des commandes.
+
+🔹 Qu’est-ce qu’un métacaractère dans un shell ?
+
+Les métacaractères sont des symboles qui ont une signification spéciale dans un shell. Ils ne sont pas interprétés comme de simples caractères, mais modifient le comportement des commandes.
+
+Exemples de métacaractères courants :
+	•	| (pipe) → Envoie la sortie d’une commande à une autre.
+	•	> (redirection de sortie) → Enregistre la sortie dans un fichier.
+	•	< (redirection d’entrée) → Utilise un fichier comme entrée.
+	•	&& et || → Exécute conditionnellement des commandes.
+	•	; (point-virgule) → Sépare plusieurs commandes sur une seule ligne.
+	•	\ (backslash) → Échappe un caractère spécial.
+	•	$ → Indique une variable d’environnement (ex: $HOME).
+	•	* → Wildcard (correspond à plusieurs fichiers).
+
+Dans Minishell, il est crucial de gérer correctement ces caractères, notamment avec les quotes (' et ").
+
+🔹 Pourquoi ne pas interpréter les guillemets non fermés ?
+
+Un shell comme bash attend que toutes les quotes ouvertes soient fermées avant d’exécuter une commande.
+
+Exemple de problème :
+
+$ echo 'Hello World
+>  # Le shell attend toujours la fermeture du '
+
+Le prompt > signifie que le shell attend encore la fermeture de la quote.
+
+🔴 Dans Minishell, si une quote est ouverte sans être fermée, il ne faut pas exécuter la commande. Il faut gérer ce cas pour éviter des comportements imprévisibles.
+
+🔹 Différence entre les guillemets simples ' et doubles "
+
+Les quotes sont utilisées pour gérer comment les métacaractères doivent être interprétés.
+
+1️⃣ Les guillemets simples ' : Désactivation totale des métacaractères
+
+Tout ce qui est entre guillemets simples est interprété tel quel, sans exception.
+
+✅ Exemple avec une variable :
+
+$ echo '$USER'
+$USER  # La variable n'est PAS évaluée
+
+✅ Exemple avec un métacaractère :
+
+$ echo 'Hello | World'
+Hello | World  # Le pipe `|` n'est pas interprété
+
+🛑 Attention : Impossible d’inclure un ' à l’intérieur d’une chaîne déjà entourée de ' :
+
+$ echo 'Hello 'world''
+bash: unexpected EOF while looking for matching `'`
+
+2️⃣ Les guillemets doubles " : Désactivation partielle
+
+Les guillemets doubles empêchent l’interprétation de presque tous les métacaractères, sauf $.
+
+✅ Exemple avec une variable :
+
+$ echo "Bonjour $USER"
+Bonjour vincent  # La variable est évaluée
+
+✅ Exemple avec un métacaractère :
+
+$ echo "Hello | World"
+Hello | World  # Le pipe est traité comme du texte
+
+🛑 Cas spécial : " permet l’interprétation des variables ($VAR) mais pas des autres métacaractères.
+
+🔴 Exemple avec backslash \ :
+
+$ echo "Hello \"World\""
+Hello "World"  # Le backslash fonctionne pour échapper les doubles quotes
+
+🔹 En résumé :
+
+Type de Quote	Empêche tous les métacaractères ?	Les variables $VAR sont interprétées ?
+' (simple quote)	✅ OUI	❌ NON
+" (double quote)	❌ NON (seul $ fonctionne)	✅ OUI
+
+🔹 Application dans Minishell
+
+✅ Ce qu’il faut faire :
+	1.	Ne pas interpréter les quotes non fermées (echo "test → attente de fermeture).
+	2.	Traiter correctement ' pour désactiver tout (echo 'Hello | $USER' → affiche exactement Hello | $USER).
+	3.	Traiter correctement " pour désactiver tout sauf $ (echo "Hello $USER" → affiche Hello vincent).
+
+____________________________________________________________________________________
 	•	Implémenter les redirections :
 	•	< : redirige l’entrée.
 	•	> : redirige la sortie.
 	•	<< : lit l’entrée jusqu’à un délimiteur.
 	•	>> : redirige la sortie en mode append.
+
+🔹 Fonctionnement des redirections dans un shell
+
+Les redirections permettent de modifier les flux d’entrée et de sortie d’une commande. Elles utilisent les descripteurs de fichiers standard :
+	•	0 → STDIN (entrée standard)
+	•	1 → STDOUT (sortie standard)
+	•	2 → STDERR (sortie d’erreur)
+
+Dans Minishell, tu dois implémenter 4 types de redirections.
+
+1️⃣ < : Redirection de l’entrée standard
+
+📌 Utilisation :
+
+command < fichier
+
+🔹 Cela remplace l’entrée standard (stdin) par le contenu de fichier.
+
+✅ Exemple :
+
+cat < input.txt
+
+Au lieu de lire depuis le clavier, cat lira directement le contenu de input.txt.
+
+🔹 Comment ça marche en C ?
+	1.	Ouvrir le fichier en lecture (O_RDONLY).
+	2.	Remplacer STDIN avec le fichier en utilisant dup2().
+	3.	Exécuter la commande.
+
+📌 Code C pour < :
+
+int fd = open("input.txt", O_RDONLY);
+dup2(fd, 0);  // Redirige STDIN vers fd
+close(fd);
+execlp("cat", "cat", NULL);  // Exécute cat
+
+2️⃣ > : Redirection de la sortie standard
+
+📌 Utilisation :
+
+command > fichier
+
+🔹 Cela remplace la sortie standard (stdout) et écrit le résultat dans fichier.
+
+✅ Exemple :
+
+echo "Hello" > output.txt
+
+output.txt contiendra "Hello" au lieu de l’afficher dans le terminal.
+
+🔹 Comment ça marche en C ?
+	1.	Ouvrir le fichier en écriture (O_WRONLY | O_CREAT | O_TRUNC).
+	2.	Remplacer STDOUT avec ce fichier via dup2().
+	3.	Exécuter la commande.
+
+📌 Code C pour > :
+
+int fd = open("output.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+dup2(fd, 1);  // Redirige STDOUT vers fd
+close(fd);
+execlp("echo", "echo", "Hello", NULL);  // Exécute echo
+
+3️⃣ >> : Redirection en mode append
+
+📌 Utilisation :
+
+command >> fichier
+
+🔹 Semblable à > mais ajoute à la fin du fichier au lieu de l’écraser.
+
+✅ Exemple :
+
+echo "Hello" >> output.txt
+
+Si output.txt contient déjà "Bonjour", après la commande il aura :
+
+Bonjour
+Hello
+
+🔹 Comment ça marche en C ?
+	1.	Ouvrir le fichier en mode append (O_WRONLY | O_CREAT | O_APPEND).
+	2.	Remplacer STDOUT avec ce fichier via dup2().
+	3.	Exécuter la commande.
+
+📌 Code C pour >> :
+
+int fd = open("output.txt", O_WRONLY | O_CREAT | O_APPEND, 0644);
+dup2(fd, 1);  // Redirige STDOUT vers fd
+close(fd);
+execlp("echo", "echo", "Hello", NULL);  // Exécute echo
+
+4️⃣ << : Here-document (entrée jusqu’à un délimiteur)
+
+📌 Utilisation :
+
+command << DELIMITEUR
+
+🔹 Cela lit l’entrée jusqu’à rencontrer le mot DELIMITEUR.
+
+✅ Exemple :
+
+cat << EOF
+Hello
+World
+EOF
+
+Cela va envoyer “Hello\nWorld\n” à cat.
+
+🔹 Comment ça marche en C ?
+	1.	Lire ligne par ligne depuis l’entrée (stdin).
+	2.	Arrêter dès que le délimiteur est trouvé.
+	3.	Fournir ces lignes comme entrée à la commande.
+
+📌 Code C pour << (simplifié) :
+
+char *line;
+int pipefd[2];
+
+pipe(pipefd);  // Création du pipe
+while ((line = readline("> "))) {  // Lire l'entrée utilisateur
+    if (strcmp(line, "EOF") == 0) break;  // Vérifie si c'est le délimiteur
+    write(pipefd[1], line, strlen(line));  // Écrit dans le pipe
+    write(pipefd[1], "\n", 1);
+}
+close(pipefd[1]);  // Fermer l'écriture
+dup2(pipefd[0], 0);  // Rediriger STDIN vers le pipe
+execlp("cat", "cat", NULL);
+
+
+____________________________________________________________________________________
+
 	•	Implémenter les pipes (|) : la sortie d’une commande devient l’entrée de la suivante.
 	•	Gérer les variables d’environnement ($VAR).
 	•	Gérer ?, qui doit contenir le code de sortie du dernier pipeline exécuté.
