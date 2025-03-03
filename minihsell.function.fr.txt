@@ -36,8 +36,8 @@ Gestion des signaux
 	•	kill : Envoie un signal à un processus.
 
 Gestion des fichiers et répertoires
-	•	getcwd : Récupère le répertoire de travail actuel.
-	•	chdir : Change le répertoire de travail actuel.
+	•	**getcwd : Récupère le répertoire de travail actuel.**
+	•	**chdir : Change le répertoire de travail actuel.**
 	•	stat : Récupère des informations sur un fichier.
 	•	lstat : Similaire à stat, mais fonctionne avec les liens symboliques.
 	•	fstat : Similaire à stat, mais fonctionne avec un descripteur de fichier.
