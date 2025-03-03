@@ -13,13 +13,13 @@ Gestion de la mémoire
 	•	**free : Libère un bloc de mémoire précédemment alloué.
 
 Gestion des entrées/sorties (I/O)
-	•	write : Écrit des données dans un fichier ou sur la sortie standard.
-	•	access : Vérifie l’existence et les permissions d’un fichier.
-	•	open : Ouvre un fichier et retourne un descripteur de fichier.
-	•	read : Lit des données depuis un fichier ou l’entrée standard.
-	•	close : Ferme un descripteur de fichier.
-	•	dup : Duplique un descripteur de fichier.
-	•	dup2 : Duplique un descripteur de fichier en le redirigeant vers un autre.
+	•	**write : Écrit des données dans un fichier ou sur la sortie standard.
+	•	**access : Vérifie l’existence et les permissions d’un fichier. [pour la redirection de la sortie]
+	•	**open : Ouvre un fichier et retourne un descripteur de fichier.
+	•	**read : Lit des données depuis un fichier ou l’entrée standard.
+	•	**close : Ferme un descripteur de fichier.
+	•	**dup : Duplique un descripteur de fichier.
+	•	**dup2 : Duplique un descripteur de fichier en le redirigeant vers un autre.
 
 Gestion des processus
 	•	fork : Crée un nouveau processus enfant.
