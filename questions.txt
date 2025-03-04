@@ -1,0 +1,175 @@
+Dans Minishell, l’utilisation des variables globales est fortement déconseillée, sauf pour indiquer qu’un signal a été reçu. Voici pourquoi :
+
+1️⃣ Pourquoi éviter les variables globales ?
+
+Les variables globales posent plusieurs problèmes :
+	•	Sécurité : Elles peuvent être modifiées n’importe où dans le code, ce qui peut rendre le débogage difficile.
+	•	Lisibilité & modularité : Elles rendent le code moins clair et plus difficile à maintenir.
+	•	Problèmes de concurrence : Dans un environnement multithreadé (même si ce n’est pas le cas ici), elles peuvent entraîner des conflits.
+	•	Bash n’utilise pas de globales : Bash et les autres shells fonctionnent sans variables globales pour les états internes, donc il est logique de suivre cette approche.
+
+Cependant, un signal reçu doit être enregistré quelque part, et la seule exception autorisée pour une variable globale est son utilisation pour stocker ce signal.
+
+2️⃣ Pourquoi a-t-on besoin de gérer les signaux ?
+
+Les signaux sont utilisés pour interagir avec le shell et gérer des situations importantes comme l’interruption d’une commande. Voici les cas principaux :
+
+📌 Interruption de l’exécution
+	•	CTRL + C (SIGINT) :
+	•	Permet à l’utilisateur d’interrompre une commande en cours (comme cat ou sleep).
+	•	Le shell doit afficher un nouveau prompt au lieu de quitter complètement.
+	•	CTRL + D (EOF) :
+	•	Sert à fermer le shell proprement si l’utilisateur est en mode interactif.
+	•	CTRL + \ (SIGQUIT) :
+	•	Doit être ignoré dans bash, donc votre Minishell doit aussi le gérer.
+
+📌 Propagation des signaux aux processus fils
+	•	Lorsque Minishell exécute une commande (ex: sleep 10), elle est lancée dans un processus fils.
+	•	Si l’utilisateur fait CTRL + C, le signal doit être envoyé au bon processus, mais le shell ne doit pas être interrompu.
+
+📌 Récupérer le code de sortie des processus
+	•	$? doit contenir le code de retour du dernier processus exécuté.
+	•	Si un processus est interrompu par un signal, son code de retour doit refléter cela.
+
+3️⃣ Pourquoi une variable globale pour les signaux est-elle autorisée ?
+
+Un gestionnaire de signal (signal(), sigaction()) ne peut pas exécuter de code complexe directement, car il interrompt l’exécution normale du programme.
+
+💡 Solution :
+	•	Utiliser une seule variable globale pour enregistrer le dernier signal reçu.
+	•	Ensuite, dans la boucle principale du shell, vérifier cette variable et agir en conséquence.
+
+Exemple :
+
+#include <signal.h>
+#include <stdio.h>
+#include <unistd.h>
+
+volatile sig_atomic_t g_signal_received = 0;
+
+void signal_handler(int sig) {
+    g_signal_received = sig;  // Stocke le signal reçu
+}
+
+int main() {
+    signal(SIGINT, signal_handler);  // Capture CTRL + C
+
+    while (1) {
+        if (g_signal_received == SIGINT) {
+            printf("\nSignal SIGINT reçu ! Affichage d'un nouveau prompt.\n");
+            g_signal_received = 0; // Réinitialisation
+        }
+        printf("minishell$ ");
+        fflush(stdout);
+        sleep(1);
+    }
+
+    return 0;
+}
+
+Dans cet exemple :
+	•	CTRL + C ne tue pas le shell mais déclenche une action contrôlée (afficher un nouveau prompt).
+	•	g_signal_received est la seule variable globale autorisée.
+
+🔹 En résumé :
+
+✅ Éviter les variables globales rend le code plus propre et plus modulaire.
+✅ Les signaux sont essentiels pour interagir avec l’utilisateur (CTRL+C, CTRL+D).
+✅ Une seule variable globale est autorisée pour stocker le signal reçu et l’utiliser proprement dans la boucle principale.
+
+Si tu veux plus de détails sur la gestion des signaux dans Minishell, dis-moi ! 🚀
+
+______________________________________________________________________________________________________________________________
+🔹 Qu’est-ce qu’un métacaractère dans un shell ?
+
+Les métacaractères sont des symboles qui ont une signification spéciale dans un shell. Ils ne sont pas interprétés comme de simples caractères, mais modifient le comportement des commandes.
+
+Exemples de métacaractères courants :
+	•	| (pipe) → Envoie la sortie d’une commande à une autre.
+	•	> (redirection de sortie) → Enregistre la sortie dans un fichier.
+	•	< (redirection d’entrée) → Utilise un fichier comme entrée.
+	•	&& et || → Exécute conditionnellement des commandes.
+	•	; (point-virgule) → Sépare plusieurs commandes sur une seule ligne.
+	•	\ (backslash) → Échappe un caractère spécial.
+	•	$ → Indique une variable d’environnement (ex: $HOME).
+	•	* → Wildcard (correspond à plusieurs fichiers).
+
+Dans Minishell, il est crucial de gérer correctement ces caractères, notamment avec les quotes (' et ").
+
+🔹 Pourquoi ne pas interpréter les guillemets non fermés ?
+
+Un shell comme bash attend que toutes les quotes ouvertes soient fermées avant d’exécuter une commande.
+
+Exemple de problème :
+
+$ echo 'Hello World
+>  # Le shell attend toujours la fermeture du '
+
+Le prompt > signifie que le shell attend encore la fermeture de la quote.
+
+🔴 Dans Minishell, si une quote est ouverte sans être fermée, il ne faut pas exécuter la commande. Il faut gérer ce cas pour éviter des comportements imprévisibles.
+
+🔹 Différence entre les guillemets simples ' et doubles "
+
+Les quotes sont utilisées pour gérer comment les métacaractères doivent être interprétés.
+
+1️⃣ Les guillemets simples ' : Désactivation totale des métacaractères
+
+Tout ce qui est entre guillemets simples est interprété tel quel, sans exception.
+
+✅ Exemple avec une variable :
+
+$ echo '$USER'
+$USER  # La variable n'est PAS évaluée
+
+✅ Exemple avec un métacaractère :
+
+$ echo 'Hello | World'
+Hello | World  # Le pipe `|` n'est pas interprété
+
+🛑 Attention : Impossible d’inclure un ' à l’intérieur d’une chaîne déjà entourée de ' :
+
+$ echo 'Hello 'world''
+bash: unexpected EOF while looking for matching `'`
+
+2️⃣ Les guillemets doubles " : Désactivation partielle
+
+Les guillemets doubles empêchent l’interprétation de presque tous les métacaractères, sauf $.
+
+✅ Exemple avec une variable :
+
+$ echo "Bonjour $USER"
+Bonjour vincent  # La variable est évaluée
+
+✅ Exemple avec un métacaractère :
+
+$ echo "Hello | World"
+Hello | World  # Le pipe est traité comme du texte
+
+🛑 Cas spécial : " permet l’interprétation des variables ($VAR) mais pas des autres métacaractères.
+
+🔴 Exemple avec backslash \ :
+
+$ echo "Hello \"World\""
+Hello "World"  # Le backslash fonctionne pour échapper les doubles quotes
+
+🔹 En résumé :
+
+Type de Quote	Empêche tous les métacaractères ?	Les variables $VAR sont interprétées ?
+' (simple quote)	✅ OUI	❌ NON
+" (double quote)	❌ NON (seul $ fonctionne)	✅ OUI
+
+🔹 Application dans Minishell
+
+✅ Ce qu’il faut faire :
+	1.	Ne pas interpréter les quotes non fermées (echo "test → attente de fermeture).
+	2.	Traiter correctement ' pour désactiver tout (echo 'Hello | $USER' → affiche exactement Hello | $USER).
+	3.	Traiter correctement " pour désactiver tout sauf $ (echo "Hello $USER" → affiche Hello vincent).
+
+❌ Ce qu’il ne faut pas faire :
+
+🚫 Mélanger les quotes mal fermées (echo 'Hello "World doit afficher une erreur).
+🚫 Interpréter $ à l’intérieur de ' (echo '$USER' ne doit pas afficher la valeur de $USER).
+🚫 Ignorer le comportement spécial des métacaractères (echo "Hello | World" ne doit PAS exécuter un pipe).
+
+Si tu veux voir comment coder ça dans Minishell, je peux t’expliquer comment parser les quotes ! 🚀
