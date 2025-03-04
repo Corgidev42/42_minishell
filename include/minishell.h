@@ -13,6 +13,7 @@ typedef struct	s_node_ast	t_node_ast;
 # include <signal.h>
 # include <unistd.h>
 # include <readline/readline.h>
+# include <readline/history.h>
 # include "tokenizer.h"
 # include "ast.h"
 # include "app.h"
