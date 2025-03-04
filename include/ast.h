@@ -21,12 +21,11 @@ typedef struct			s_node_ast
 	char				*delimiter;
 	struct s_node_ast	*left;
 	struct s_node_ast	*right;
-	// entre / sortie fd ??
 }						t_node_ast;
 
-int		prepare_ast(t_app app);
-int		exec_ast(t_app app, t_node_ast *current_node);
-void	clean_ast(t_app app);
+int		prepare_ast(t_app *app, int start, int end);
+int		exec_ast(t_app *app, t_node_ast *current_node);
+void	clean_ast(t_app *app);
 
 
 #endif

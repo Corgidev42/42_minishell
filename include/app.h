@@ -10,6 +10,7 @@ typedef struct	s_app
 	int			status;
 	int			dquote;
 	int			pid_current;
+	t_node_ast	*first_node;
 	t_tokenizer	tokenizer;
 }				t_app;
 

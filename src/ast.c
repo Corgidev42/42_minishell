@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int		prepare_ast(t_app app, int start, int end)
+int		prepare_ast(t_app *app, int start, int end)
 {
 	/*
 	1er bloc :
@@ -20,7 +20,7 @@ int		prepare_ast(t_app app, int start, int end)
 	*/
 }
 
-int		exec_ast(t_app app, t_node_ast *current_node)
+int		exec_ast(t_app *app, t_node_ast *current_node)
 {
 	/*
 
@@ -50,4 +50,4 @@ int		exec_ast(t_app app, t_node_ast *current_node)
 	*/
 }
 
-void	clean_ast(t_app app);
+void	clean_ast(t_app *app);
