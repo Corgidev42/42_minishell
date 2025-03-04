@@ -1,19 +1,75 @@
 #include "minishell.h"
 
-char *read_input(t_app *app, char **input)
+char *read_input(t_app *app, char **input, char *delimiter)
 {
-	*input = readline("minishell> "); // Affiche le prompt
-	if (!input)
-	{ // Si Ctrl+D (EOF), quitter
-		printf("\nAu revoir !\n");
+	char *line;
+	char *temp;
+	int stdin_backup;
+
+	if (!*input)
+	{ // Vérifie si readline() retourne NULL
+		ft_printf("\nAu revoir !\n");
+		return NULL;
 	}
-	if (*input) {
-		add_history(*input);
+	if (app->is_heredoc == 1 && delimiter)
+	{
+		*input = ft_strdup("");
+		stdin_backup = dup(STDIN_FILENO); // ✅ Sauvegarde de STDIN
+		app->is_heredoc = 1; // ✅ Active heredoc
+		while (1)
+		{
+			line = readline("heredoc> "); // Affiche le prompt heredoc
+			// ft_printf("Ligne lue : %s\n", line);
+			if (!line) // CTRL + D détecté
+			{
+				ft_printf("\nwarning: here-document delimited by end-of-file\n");
+				break; // Quitte la boucle heredoc proprement
+			}
+			if (ft_strcmp(line, delimiter) == 0) // Si on tape le délimiteur, on arrête
+			{
+				free(line);
+				break;
+			}
+			temp = *input;
+			*input = ft_strjoin(temp, line);
+			free(temp);
+			temp = *input;
+			*input = ft_strjoin(temp, "\n");
+			free(temp);
+			free(line);
+		}
+		app->is_heredoc = 0; // ✅ Désactive heredoc
+		dup2(stdin_backup, STDIN_FILENO); // ✅ Restaure STDIN après interruption
+		close(stdin_backup);
 	}
-	printf("Commande entrée : %s\n", *input);
+	else
+		{
+			*input = readline("minishell> "); // Affiche le prompt
+			if (!*input) // CTRL + D détecté
+			{
+				ft_printf("\nAu revoir !\n");
+				app->running = 0; // Quitter le shell proprement
+				return NULL;
+			}
+			if (*input)
+				add_history(*input);
+			if (ft_strcmp(*input,"history -c") == 0)
+			{
+				rl_clear_history();
+				ft_printf("Historique effacé !\n");
+			}
+			ft_printf("Commande entrée : %s\n", *input);
+		}
+	ft_printf("Contenu de input : %s\n", *input);
 	return *input;
 }
+
 int	check_entry(t_app *app, char *input)
 {
-	return 0;
+	if (!input)
+	{
+		app->running = 0;
+		return 0;
+	}
+	return 1;
 }

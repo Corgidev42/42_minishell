@@ -15,6 +15,7 @@ typedef struct	s_node_ast	t_node_ast;
 # include "libft.h"
 # include "tokenizer.h"
 # include "ast.h"
+# include "libft.h"
 # include "app.h"
 # include "input.h"
 
