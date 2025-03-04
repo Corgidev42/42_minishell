@@ -6,7 +6,7 @@ void	minishell(t_app *app)
 
 	while (app->running && read_input(app, &input)) //si heredoc, on affiche "heredoc>"
 	{
-		if (check_entry(app, input))	//on regarde l'entre du prompt et si y'a pas de ctrl d ou exit
+		if (check_entry(app, input))	//on regarde l'entre du prompt et si y'a pas de ctrl d
 		{
 			if (tokenize(app, input))	//remplie struct tokenizer en decoupant tous l'input correctement en prennant comptes les quotes
 				perror("tokenize");

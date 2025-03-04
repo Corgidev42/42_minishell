@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Werror -Wextra -Wall
+CFLAGS = -lreadline
 
 PROJECT_NAME = minishell
 
@@ -19,5 +19,5 @@ fclean : clean
 
 re : fclean all
 
-run : 
+run :
 	./$(PROJECT_NAME)

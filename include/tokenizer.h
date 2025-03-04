@@ -1,13 +1,13 @@
-#ifndef TOKEN_H
-# define TOKEN_H
+#ifndef TOKENIZER_H
+# define TOKENIZER_H
 
 # include "minishell.h"
 
-typedef struct s_tokenizer
+struct		s_tokenizer
 {
 	char	*tokens[4096];
 	int		t_count;
-}	t_tokenizer;
+};
 
 
 int		tokenize(t_app *app, char *input);
