@@ -6,8 +6,6 @@ typedef enum	e_node_type	t_node_type;
 typedef struct	s_tokenizer	t_tokenizer;
 typedef struct	s_node_ast	t_node_ast;
 
-
-
 # include <stdio.h>
 # include <stdlib.h>
 # include <signal.h>
@@ -16,6 +14,7 @@ typedef struct	s_node_ast	t_node_ast;
 # include <readline/history.h>
 # include "tokenizer.h"
 # include "ast.h"
+# include "libft.h"
 # include "app.h"
 # include "input.h"
 
