@@ -1,7 +1,0 @@
-{
-	"files.associations": {
-		"termcap.h": "c",
-		"term.h": "c",
-		"signal.h": "c"
-	}
-}
