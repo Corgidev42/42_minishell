@@ -9,7 +9,6 @@ struct		s_tokenizer
 	int		t_count;
 };
 
-
 int		tokenize(t_app *app, char *input);
 void	clean_tokenizer(t_app *app);		//remplie struct tokenizer en decoupant tous l'input correctement en prennant comptes les quotes
 

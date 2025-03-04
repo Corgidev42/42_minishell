@@ -92,7 +92,8 @@ relibft:
 	rm -rf $(LIBFT_DIR)
 	$(MAKE) $(LIBFT)
 
+# 🚀 Lancer le programme
 run: all
-	./$(PROJECT_NAME)
+	@./$(PROJECT_NAME)
 
-.PHONY: all clean fclean re relibft
+.PHONY: all clean fclean re relibft run
