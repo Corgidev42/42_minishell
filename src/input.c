@@ -4,18 +4,21 @@ char *read_input(t_app *app, char **input, char *delimiter)
 {
 	char *line;
 	char *temp;
-	if (!*input) { // Vérifie si readline() retourne NULL
+	int stdin_backup;
+
+	if (!*input)
+	{ // Vérifie si readline() retourne NULL
 		ft_printf("\nAu revoir !\n");
 		return NULL;
 	}
 	if (app->is_heredoc == 1 && delimiter)
 	{
 		*input = ft_strdup("");
+		stdin_backup = dup(STDIN_FILENO); // ✅ Sauvegarde de STDIN
+		app->is_heredoc = 1; // ✅ Active heredoc
 		while (1)
 		{
-			app->is_heredoc = 1;
 			line = readline("heredoc> "); // Affiche le prompt heredoc
-			app->is_heredoc = 0;
 			// ft_printf("Ligne lue : %s\n", line);
 			if (!line) // CTRL + D détecté
 			{
@@ -35,6 +38,9 @@ char *read_input(t_app *app, char **input, char *delimiter)
 			free(temp);
 			free(line);
 		}
+		app->is_heredoc = 0; // ✅ Désactive heredoc
+		dup2(stdin_backup, STDIN_FILENO); // ✅ Restaure STDIN après interruption
+		close(stdin_backup);
 	}
 	else
 		{

@@ -2,7 +2,6 @@
 #include <signal.h>
 
 t_app *g_app;
-extern int rl_done;
 
 // Gestionnaire pour SIGINT (CTRL + C)
 void sigint_handler(int sig)
@@ -11,13 +10,11 @@ void sigint_handler(int sig)
 	if (g_app->is_heredoc)
 	{
 		g_app->is_heredoc = 0;
-		write(1, "\n", 1);
-		rl_replace_line("", 0);
-		rl_redisplay();
+		close(STDIN_FILENO);   // ✅ Ferme STDIN pour interrompre readline()
+		write(1, "\nHeredoc annulé\n", 16);
 	}
 	else
 	{
-		write(1, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
