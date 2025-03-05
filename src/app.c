@@ -15,9 +15,10 @@ void sigint_handler(int sig)
 	}
 	else
 	{
+		write(STDOUT_FILENO, "\n", 1);
+		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
-		rl_replace_line("", 1);
 	}
 }
 
@@ -55,9 +56,9 @@ int	init_app(t_app *app, char **envp)
 	app->dquote = 1;
 	app->status = 0;
 	app->is_heredoc = 0;
-	app->fd[0] = dup(STDIN_FILENO);
+	app->fd[0] = STDIN_FILENO;
 	// app->fd[1] = open("out.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	app->fd[1] = dup(STDOUT_FILENO);
+	app->fd[1] = STDOUT_FILENO;
 	app->pid_current = getpid();
 	app->first_node = NULL;
 	app->tokenizer.t_count = 0;

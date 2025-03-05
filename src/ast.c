@@ -38,7 +38,10 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 	while (i <= end)
 	{
 		int priority = get_operator_priority(app->tokenizer.tokens[i]);
-		if (priority != -1 && priority < min_priority)
+		if (priority != -1 
+			&& ((priority == 1 && priority < min_priority))
+			|| (priority == 2 && priority <= min_priority)
+			|| (priority == 3 && priority <= min_priority))
 		{
 			min_priority = priority;
 			op_index = i;
@@ -125,13 +128,13 @@ void print_ast(t_node_ast *ast, int level)
     else if (ast->type == NODE_PIPE)
         printf("PIPE\n");
     else if (ast->type == NODE_R_INPUT)
-        printf("REDIR IN: %s\n", ast->args ? ast->args[0] : "(null)");
+        printf("REDIR IN: %s\n", ast->filepath);
     else if (ast->type == NODE_R_OUTPUT)
-        printf("REDIR OUT: %s\n", ast->args ? ast->args[0] : "(null)");
+        printf("REDIR OUT: %s\n", ast->filepath);
     else if (ast->type == NODE_R_OUTPUT_APPEND)
-        printf("APPEND: %s\n", ast->args ? ast->args[0] : "(null)");
+        printf("APPEND: %s\n", ast->filepath);
     else if (ast->type == NODE_DELIMITER)
-        printf("HEREDOC: %s\n", ast->args ? ast->args[0] : "(null)");
+        printf("HEREDOC: %s\n", ast->delimiter);
 
 	if (ast->left)
     	print_ast(ast->left, level + 1);
@@ -163,8 +166,9 @@ void	ast_pipe(t_app *app, t_node_ast *current_node)
 
 void	ast_r_input(t_app *app, t_node_ast *current_node)
 {
-	int fd = open(current_node->filepath, O_RDONLY);
+	int fd;
 
+	fd = open(current_node->filepath, O_RDONLY);
 	if (fd == -1)
 	{
 		perror("open");
@@ -172,7 +176,8 @@ void	ast_r_input(t_app *app, t_node_ast *current_node)
 	}
 
 	// Modifier fd pour que STDIN lise depuis le fichier
-	app->fd[0] = fd;
+	if (app->fd[0] == STDIN_FILENO)
+		app->fd[0] = fd;
 
 	// Continuer avec la commande associée
 	exec_ast(app, current_node->left);
@@ -190,7 +195,8 @@ void	ast_r_output(t_app *app, t_node_ast *current_node)
 	}
 
 	// Modifier fd pour que STDOUT écrive dans le fichier
-	app->fd[1] = fd;
+	if (app->fd[1] == STDOUT_FILENO)
+		app->fd[1] = fd;
 
 	// Exécuter la commande associée
 	exec_ast(app, current_node->left);
@@ -208,7 +214,8 @@ void	ast_r_output_append(t_app *app, t_node_ast *current_node)
 	}
 
 	// Modifier fd pour que STDOUT ajoute dans le fichier
-	app->fd[1] = fd;
+	if (app->fd[1] == STDOUT_FILENO)
+		app->fd[1] = fd;
 
 	// Exécuter la commande associée
 	exec_ast(app, current_node->left);
@@ -233,7 +240,8 @@ void	ast_delimiter(t_app *app, t_node_ast *current_node)
 	close(pipe_fd[1]);
 
 	// Modifier fd pour que STDIN lise depuis le pipe
-	app->fd[0] = pipe_fd[0];
+	if (app->fd[0] == STDIN_FILENO)
+		app->fd[0] = pipe_fd[0];
 
 	// Exécuter la commande qui doit lire depuis le heredoc
 	exec_ast(app, current_node->left);
