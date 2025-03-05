@@ -254,6 +254,43 @@ void	ast_delimiter(t_app *app, t_node_ast *current_node)
 	wait(NULL);
 }
 
+char *search_file(t_app *app, char *command)
+{
+	int	i;
+	char	*path;
+	char	**paths;
+	char	*file;
+
+	i = 0;
+	while (app->envp[i])
+	{
+		if (ft_strncmp(app->envp[i], "PATH=", 5) == 0)
+		{
+			path = ft_strdup(app->envp[i] + 5);
+			break;
+		}
+		i++;
+	}
+	paths = ft_split(path, ':');
+	i = 0;
+	while (paths[i])
+	{
+		file = ft_strjoin(paths[i], "/");
+		file = ft_strjoin(file, command);
+		if (access(file, F_OK) == 0)
+		{
+			free(path);
+			free(paths);
+			return (file);
+		}
+		free(file);
+		i++;
+	}
+	free(path);
+	free(paths);
+	return (NULL);
+}
+
 void	ast_command(t_app *app, t_node_ast *current_node)
 {
 	int	pid;
@@ -262,7 +299,7 @@ void	ast_command(t_app *app, t_node_ast *current_node)
 	pid = fork();
 	if (pid == 0)
 	{
-		execve(current_node->args[0], current_node->args, app->envp);
+		execve(search_file(app, current_node->args[0]), current_node->args, app->envp);
 		perror("execve");
 		exit(1);
 	}
