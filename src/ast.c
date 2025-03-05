@@ -38,7 +38,7 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 	while (i <= end)
 	{
 		int priority = get_operator_priority(app->tokenizer.tokens[i]);
-		if (priority != -1 
+		if (priority != -1
 			&& ((priority == 1 && priority < min_priority))
 			|| (priority == 2 && priority <= min_priority)
 			|| (priority == 3 && priority <= min_priority))
@@ -350,7 +350,26 @@ int		exec_ast(t_app *app, t_node_ast *current_node)
 	return (0);
 }
 
-void	clean_ast(t_app *app)
+void clean_ast(t_node_ast *node)
 {
-
+	if (!node)
+		return;
+	// Libérer récursivement les sous-arbres gauche et droit
+	clean_ast(node->left);
+	clean_ast(node->right);
+	// Libérer les arguments si c'est une commande
+	if (node->args)
+	{
+		for (int i = 0; node->args[i]; i++)
+			free(node->args[i]);
+		free(node->args);
+	}
+	// Libérer le nom de fichier si c'est une redirection
+	if (node->filepath)
+		free(node->filepath);
+	// Libérer le délimiteur si c'est un heredoc
+	if (node->delimiter)
+		free(node->delimiter);
+	// Libérer le nœud lui-même
+	free(node);
 }
