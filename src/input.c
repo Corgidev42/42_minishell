@@ -14,12 +14,11 @@ char *read_input(t_app *app, char **input, char *delimiter)
 	if (app->is_heredoc == 1 && delimiter)
 	{
 		*input = ft_strdup("");
-		stdin_backup = dup(STDIN_FILENO); // ✅ Sauvegarde de STDIN
-		app->is_heredoc = 1; // ✅ Active heredoc
+		stdin_backup = dup(STDIN_FILENO); // Sauvegarde de STDIN
+		app->is_heredoc = 1;
 		while (1)
 		{
 			line = readline("heredoc> "); // Affiche le prompt heredoc
-			// ft_printf("Ligne lue : %s\n", line);
 			if (!line) // CTRL + D détecté
 			{
 				ft_printf("\nwarning: here-document delimited by end-of-file\n");
@@ -58,7 +57,6 @@ char *read_input(t_app *app, char **input, char *delimiter)
 				rl_clear_history();
 				ft_printf("Historique effacé !\n");
 			}
-			ft_printf("Commande entrée : %s\n", *input);
 		}
 	ft_printf("Contenu de input : %s\n", *input);
 	return *input;
