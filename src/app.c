@@ -56,6 +56,7 @@ int	init_app(t_app *app, char **envp)
 	app->status = 0;
 	app->is_heredoc = 0;
 	app->fd[0] = dup(STDIN_FILENO);
+	// app->fd[1] = open("out.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	app->fd[1] = dup(STDOUT_FILENO);
 	app->pid_current = getpid();
 	app->first_node = NULL;
