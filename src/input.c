@@ -53,7 +53,7 @@ char *read_input(t_app *app, char **input, char *delimiter)
 				ft_printf("Historique effacé !\n");
 			}
 		}
-	ft_printf("Contenu de input : %s\n", *input);
+	// ft_printf("Contenu de input : %s\n", *input);
 	return *input;
 }
 

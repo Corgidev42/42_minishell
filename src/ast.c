@@ -261,6 +261,7 @@ char *search_file(t_app *app, char *command)
 	char	**paths;
 	char	*file;
 
+	// TODO : Lorsque l'on aura nos built in passer par les notre d'abord
 	i = 0;
 	while (app->envp[i])
 	{
@@ -324,6 +325,7 @@ int		exec_ast(t_app *app, t_node_ast *current_node)
 		ast_delimiter(app, current_node);
 	else if (current_node->type == NODE_COMMAND)
 		ast_command(app, current_node);
+	return (0);
 }
 
 void	clean_ast(t_app *app)
