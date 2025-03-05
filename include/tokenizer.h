@@ -5,7 +5,7 @@
 
 struct		s_tokenizer
 {
-	char	*tokens[4096];
+	char	**tokens;
 	int		t_count;
 };
 

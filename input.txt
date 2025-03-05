@@ -3,4 +3,4 @@ qwerty
 test
 4567
 uioptest
-ok
+ok test
