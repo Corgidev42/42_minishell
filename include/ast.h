@@ -16,7 +16,7 @@ enum			e_node_type
 struct			s_node_ast
 {
 	t_node_type			type;
-	char				*args;
+	char				*args[4096];
 	char				*filepath;
 	char				*delimiter;
 	struct s_node_ast	*left;
