@@ -1,0 +1,3 @@
+heredoc> 
+warning: here-document delimited by end-of-file
+minishell> 

@@ -2,13 +2,13 @@
 
 int get_operator_priority(char *token) {
 	if (ft_strcmp(token, "<<") == 0)
-		return (1);
-	if (ft_strcmp(token, "<") == 0)
-		return (2);
-	if (ft_strcmp(token, ">") == 0 || ft_strcmp(token, ">>") == 0)
 		return (3);
+	if (ft_strcmp(token, "<") == 0)
+		return (3);
+	if (ft_strcmp(token, ">") == 0 || ft_strcmp(token, ">>") == 0)
+		return (2);
 	if (ft_strcmp(token, "|") == 0)
-		return (4);
+		return (1);
 	return (-1);
 }
 
@@ -88,7 +88,6 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 			node->left = prepare_ast(app, start, op_index - 1);
 			node->right = prepare_ast(app, op_index + 2, end);
 			return node;
-
 		}
 		else
 			return (NULL); // cas où un token de type command n'aurais pas l'index -1
@@ -96,6 +95,8 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 	// sinon on creer un noeud de type command
 	char **args = NULL;
 	args = malloc(sizeof(char*) * (end - start) + 2);
+	if (!args)
+		return (NULL);
 	i = 0;
 	while (start <= end)
 	{
@@ -103,7 +104,7 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 		start++;
 		i++;
 	}
-	args[start] = NULL;
+	args[i] = NULL;
 	t_node_ast *node = create_ast_node(NODE_COMMAND, args , NULL, NULL);
 	return node;
 }
@@ -204,6 +205,10 @@ void	ast_r_output(t_app *app, t_node_ast *current_node)
 	}
 	close(fd);
 	wait(NULL);
+
+	// dup2(fd, STDOUT_FILENO);
+	// close(fd);
+	// exec_ast(app, current_node->left);
 }
 
 void	ast_r_output_append(t_app *app, t_node_ast *current_node)
@@ -239,7 +244,6 @@ void	ast_delimiter(t_app *app, t_node_ast *current_node)
 	if (input)
 	{
 		write(pipe_fd[1], input, strlen(input));
-		write(pipe_fd[1], "\n", 1);
 		free(input);
 	}
 	close(pipe_fd[1]);
@@ -289,7 +293,7 @@ char *search_file(t_app *app, char *command)
 	}
 	free(path);
 	free(paths);
-	return (NULL);
+	return (command);
 }
 
 void	ast_command(t_app *app, t_node_ast *current_node)
@@ -301,7 +305,7 @@ void	ast_command(t_app *app, t_node_ast *current_node)
 	if (pid == 0)
 	{
 		execve(search_file(app, current_node->args[0]), current_node->args, app->envp);
-		perror("execve");
+		perror("minishell");
 		exit(1);
 	}
 	else

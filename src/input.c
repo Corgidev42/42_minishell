@@ -41,7 +41,6 @@ char *read_input(t_app *app, char **input, char *delimiter)
 			*input = readline("minishell> "); // Affiche le prompt
 			if (!*input) // CTRL + D détecté
 			{
-				ft_printf("\nAu revoir !\n");
 				app->running = 0; // Quitter le shell proprement
 				return NULL;
 			}
@@ -64,5 +63,7 @@ int	check_entry(t_app *app, char *input)
 		app->running = 0;
 		return 0;
 	}
+	if (ft_strlen(input) == 0)
+		return 0;
 	return 1;
 }
