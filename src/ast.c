@@ -38,7 +38,7 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 	while (i <= end)
 	{
 		int priority = get_operator_priority(app->tokenizer.tokens[i]);
-		if (priority != -1 && priority <= min_priority)
+		if (priority != -1 && priority < min_priority)
 		{
 			min_priority = priority;
 			op_index = i;
