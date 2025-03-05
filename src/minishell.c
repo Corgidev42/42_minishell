@@ -4,6 +4,7 @@ void	minishell(t_app *app)
 {
 	char *input;
 
+	input = NULL;
 	while (app->running && read_input(app, &input, "EOF")) //si heredoc, on affiche "heredoc>"
 	{
 		if (check_entry(app, input))	//on regarde l'entre du prompt et si y'a pas de ctrl d

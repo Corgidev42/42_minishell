@@ -6,11 +6,6 @@ char *read_input(t_app *app, char **input, char *delimiter)
 	char *temp;
 	int stdin_backup;
 
-	if (!*input)
-	{ // Vérifie si readline() retourne NULL
-		ft_printf("\nAu revoir !\n");
-		return NULL;
-	}
 	if (app->is_heredoc == 1 && delimiter)
 	{
 		*input = ft_strdup("");

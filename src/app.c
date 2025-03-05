@@ -56,6 +56,8 @@ int	init_app(t_app *app, char **envp)
 	app->status = 0;
 	app->is_heredoc = 0;
 	app->pid_current = getpid();
+	app->first_node = NULL;
+	app->tokenizer.t_count = 0;
 
 	set_signal(app);
 	return 0;

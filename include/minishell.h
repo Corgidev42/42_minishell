@@ -12,6 +12,8 @@ typedef struct	s_node_ast	t_node_ast;
 # include <unistd.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/wait.h>
+# include <fcntl.h>
 # include "libft.h"
 # include "tokenizer.h"
 # include "ast.h"
