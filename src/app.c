@@ -55,6 +55,8 @@ int	init_app(t_app *app, char **envp)
 	app->dquote = 1;
 	app->status = 0;
 	app->is_heredoc = 0;
+	app->fd[0] = dup(STDIN_FILENO);
+	app->fd[1] = dup(STDOUT_FILENO);
 	app->pid_current = getpid();
 	app->first_node = NULL;
 	app->tokenizer.t_count = 0;

@@ -12,6 +12,7 @@ struct	s_app
 	int				is_heredoc;
 	int				status;
 	int				dquote;
+	int				fd[2];
 	int				pid_current;
 	t_node_ast		*first_node;
 	t_tokenizer		tokenizer;

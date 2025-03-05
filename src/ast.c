@@ -301,15 +301,22 @@ void	ast_command(t_app *app, t_node_ast *current_node)
 	int	pid;
 	int	status;
 
+	pipe(app->fd);
 	pid = fork();
 	if (pid == 0)
 	{
+		dup2(app->fd[0] , STDIN_FILENO);
+		dup2(app->fd[1] , STDOUT_FILENO);
+		close(app->fd[0]);
+		close(app->fd[1]);
 		execve(search_file(app, current_node->args[0]), current_node->args, app->envp);
 		perror("minishell");
 		exit(1);
 	}
 	else
 	{
+		close(app->fd[0]);
+		close(app->fd[1]);
 		waitpid(pid, &status, 0);
 		app->status = WEXITSTATUS(status);
 	}
