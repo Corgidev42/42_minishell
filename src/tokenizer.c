@@ -88,6 +88,8 @@ int		tokenize(t_app *app, char *input)
 	tokenizer.tokens = (char **)malloc(sizeof(char *) * 4096);
 	if (!tokenizer.tokens)
 		return (1);
+	for (int i = 0; i < 4096; i++)
+		tokenizer.tokens[i] = NULL;
 	for (const char *ptr = input; *ptr; ptr++)
 	{
 		if (!in_single_quote && !in_double_quote && isspace(*ptr))
