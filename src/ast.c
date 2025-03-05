@@ -63,7 +63,7 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 		else if (ft_strcmp(app->tokenizer.tokens[op_index], ">") == 0)
 		{
 			type = NODE_R_OUTPUT;
-			t_node_ast *node = create_ast_node(NODE_R_OUTPUT, NULL, app->tokenizer.tokens[op_index + 1], NULL);
+			t_node_ast *node = create_ast_node(NODE_R_OUTPUT, NULL, ft_strdup(app->tokenizer.tokens[op_index + 1]), NULL);
 			node->left = prepare_ast(app, start, op_index - 1);
 			node->right = prepare_ast(app, op_index + 2, end);
 			return node;
@@ -71,7 +71,7 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 		else if (ft_strcmp(app->tokenizer.tokens[op_index], ">>") == 0)
 		{
 			type = NODE_R_OUTPUT_APPEND;
-			t_node_ast *node = create_ast_node(NODE_R_OUTPUT_APPEND, NULL, app->tokenizer.tokens[op_index + 1], NULL);
+			t_node_ast *node = create_ast_node(NODE_R_OUTPUT_APPEND, NULL, ft_strdup(app->tokenizer.tokens[op_index + 1]), NULL);
 			node->left = prepare_ast(app, start, op_index - 1);
 			node->right = prepare_ast(app, op_index + 2, end);
 			return node;
@@ -79,7 +79,7 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 		else if (ft_strcmp(app->tokenizer.tokens[op_index], "<") == 0)
 		{
 			type = NODE_R_INPUT;
-			t_node_ast *node = create_ast_node(NODE_R_INPUT, NULL, app->tokenizer.tokens[op_index + 1], NULL);
+			t_node_ast *node = create_ast_node(NODE_R_INPUT, NULL, ft_strdup(app->tokenizer.tokens[op_index + 1]), NULL);
 			node->left = prepare_ast(app, start, op_index - 1);
 			node->right = prepare_ast(app, op_index + 2, end);
 			return node;
@@ -87,7 +87,7 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 		else if (ft_strcmp(app->tokenizer.tokens[op_index], "<<") == 0)
 		{
 			type = NODE_DELIMITER;
-			t_node_ast *node = create_ast_node(NODE_DELIMITER, NULL, NULL, app->tokenizer.tokens[op_index + 1]);
+			t_node_ast *node = create_ast_node(NODE_DELIMITER, NULL, NULL, ft_strdup(app->tokenizer.tokens[op_index + 1]));
 			node->left = prepare_ast(app, start, op_index - 1);
 			node->right = prepare_ast(app, op_index + 2, end);
 			return node;
@@ -96,8 +96,8 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 			return (NULL); // cas où un token de type command n'aurais pas l'index -1
 	}
 	// sinon on creer un noeud de type command
-	char **args = NULL;
-	args = malloc(sizeof(char*) * (end - start) + 2);
+	char **args;
+	args = malloc(sizeof(char*) * ((end - start) + 2));
 	if (!args)
 		return (NULL);
 	i = 0;

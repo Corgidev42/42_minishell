@@ -14,11 +14,12 @@ void	minishell(t_app *app)
 			app->first_node = prepare_ast(app, 0, app->tokenizer.t_count - 1);
 			if (!app->first_node)	//prepare les branches de l'ast
 				perror("prepare ast");
-			print_ast(app->first_node, 0);
+			// print_ast(app->first_node, 0);
 			if (exec_ast(app, app->first_node)) //execute l'ast dans le bonne ordre
 				perror("exec ast");
 			clean_tokenizer(app);
-			clean_ast(app);
+			clean_ast(app->first_node);
+			app->first_node = NULL;
 		}
 	}
 }
