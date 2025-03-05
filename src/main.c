@@ -13,6 +13,7 @@ t_node_ast *create_test_ast()
 
 	root->left->left = malloc(sizeof(t_node_ast));
 	root->left->left->type = NODE_COMMAND;
+	root->left->left->args = malloc(sizeof(char *) * 2);
 	root->left->left->args[0] = ft_strdup("/bin/cat");
 	root->left->left->args[1] = NULL;
 	root->left->left->left = NULL;
@@ -25,6 +26,7 @@ t_node_ast *create_test_ast()
 
 	root->right->left = malloc(sizeof(t_node_ast));
 	root->right->left->type = NODE_COMMAND;
+	root->right->left->args = malloc(sizeof(char *) * 3);
 	root->right->left->args[0] = ft_strdup("/bin/grep");
 	root->right->left->args[1] = ft_strdup("test");
 	root->right->left->args[2] = NULL;
@@ -44,6 +46,7 @@ t_node_ast *create_heredoc_ast()
 
 	root->left = malloc(sizeof(t_node_ast));
 	root->left->type = NODE_COMMAND;
+	root->left->args = malloc(sizeof(char *) * 2);
 	root->left->args[0] = ft_strdup("/bin/cat");
 	root->left->args[1] = NULL;
 	root->left->left = NULL;
