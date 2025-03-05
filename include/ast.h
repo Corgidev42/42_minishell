@@ -23,7 +23,7 @@ struct			s_node_ast
 	struct s_node_ast	*right;
 };
 
-int		prepare_ast(t_app *app, int start, int end);
+t_node_ast	*prepare_ast(t_app *app, int start, int end);
 int		exec_ast(t_app *app, t_node_ast *current_node);
 void	clean_ast(t_app *app);
 void	print_ast(t_node_ast *ast, int level);

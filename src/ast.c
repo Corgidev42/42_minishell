@@ -12,34 +12,30 @@ int get_operator_priority(char *token) {
 	return (-1);
 }
 
-t_node_ast	*create_ast_node(t_node_type type, char **args, t_node_ast *left, t_node_ast *right)
+t_node_ast	*create_ast_node(t_node_type type, char **args, char *filepath, char *delimiter)
 {
 	t_node_ast	*node = malloc(sizeof(t_node_ast));
 	if (!node)
 		return (NULL);
 	node->type = type;
 	node->args = args;
-	node->left = left;
-	node->right = right;
+	node->filepath = filepath;
+	node->delimiter = delimiter;
+	node->left = NULL;
+	node->right = NULL;
 	return (node);
 }
 
-int		prepare_ast(t_app *app, int start, int end)
+t_node_ast	*prepare_ast(t_app *app, int start, int end)
 {
-	printf("token : %s\n", app->tokenizer.tokens[start]);
-	printf("1.1\n");
 	if (start > end)
 		return (NULL);
 
 	// Chercher l'opérateur principal en respectant les priorités
-	printf("1.2\n");
 	int	min_priority = 5;  // max prio
 	int	op_index = -1;
 	int	i = start;
-	printf("start : %d\n", start);
-	printf("end : %d\n", end);
-	printf("i : %d\n", i);
-	while (i < end)
+	while (i <= end)
 	{
 		int priority = get_operator_priority(app->tokenizer.tokens[i]);
 		if (priority != -1 && priority <= min_priority)
@@ -49,78 +45,82 @@ int		prepare_ast(t_app *app, int start, int end)
 		}
 		i++;
 	}
-	printf("1.3\n");
-
 	// Si un opérateur a été trouvé, créer le nœud correspondant
 	if (op_index != -1)
 	{
 		t_node_type type;
-		printf("1.3.0\n");
 		if (ft_strcmp(app->tokenizer.tokens[op_index], "|") == 0)
 		{
 			type = NODE_PIPE;
-			printf("1.3.1\n");
+			t_node_ast *node = create_ast_node(NODE_PIPE, NULL, NULL, NULL);
+			node->left = prepare_ast(app, start, op_index - 1);
+			node->right = prepare_ast(app, op_index + 1, end);
+			return node;
 		}
 		else if (ft_strcmp(app->tokenizer.tokens[op_index], ">") == 0)
 		{
 			type = NODE_R_OUTPUT;
-			printf("1.3.2\n");
-
+			t_node_ast *node = create_ast_node(NODE_R_OUTPUT, NULL, app->tokenizer.tokens[op_index + 1], NULL);
+			node->left = prepare_ast(app, start, op_index - 1);
+			node->right = prepare_ast(app, op_index + 2, end);
+			return node;
 		}
 		else if (ft_strcmp(app->tokenizer.tokens[op_index], ">>") == 0)
 		{
 			type = NODE_R_OUTPUT_APPEND;
-			printf("1.3.3\n");
-
+			t_node_ast *node = create_ast_node(NODE_R_OUTPUT_APPEND, NULL, app->tokenizer.tokens[op_index + 1], NULL);
+			node->left = prepare_ast(app, start, op_index - 1);
+			node->right = prepare_ast(app, op_index + 2, end);
+			return node;
 		}
 		else if (ft_strcmp(app->tokenizer.tokens[op_index], "<") == 0)
 		{
 			type = NODE_R_INPUT;
-			printf("1.3.4\n");
+			t_node_ast *node = create_ast_node(NODE_R_INPUT, NULL, app->tokenizer.tokens[op_index + 1], NULL);
+			node->left = prepare_ast(app, start, op_index - 1);
+			node->right = prepare_ast(app, op_index + 2, end);
+			return node;
 		}
 		else if (ft_strcmp(app->tokenizer.tokens[op_index], "<<") == 0)
 		{
 			type = NODE_DELIMITER;
-			printf("1.3.5\n");
+			t_node_ast *node = create_ast_node(NODE_DELIMITER, NULL, NULL, app->tokenizer.tokens[op_index + 1]);
+			node->left = prepare_ast(app, start, op_index - 1);
+			node->right = prepare_ast(app, op_index + 2, end);
+			return node;
 
 		}
 		else
-		{
-			printf("1.3.6\n");
 			return (NULL); // cas où un token de type command n'aurais pas l'index -1
-		}
-		printf("1.3.7\n");
-		char **args = NULL;
-		if (type == NODE_R_OUTPUT || type == NODE_R_OUTPUT_APPEND || type == NODE_R_INPUT || type == NODE_DELIMITER)
-		{
-			if (op_index + 1 <= end)
-				args = &app->tokenizer.tokens[op_index + 1];
-		}
-
-		int	next_start = op_index + 1;
-		if (args)
-			next_start += 1;
-		return (create_ast_node(type,
-								args,
-								prepare_ast(app, start, op_index - 1),
-								prepare_ast(app, next_start, end)));
 	}
-	printf("1.4\n");
 	// sinon on creer un noeud de type command
-	return	create_ast_node(NODE_COMMAND, &app->tokenizer.tokens[start], NULL, NULL);
+	char **args = NULL;
+	args = malloc(sizeof(char*) * (end - start) + 2);
+	i = 0;
+	while (start <= end)
+	{
+		args[i] = ft_strdup(app->tokenizer.tokens[start]);
+		start++;
+		i++;
+	}
+	args[start] = NULL;
+	t_node_ast *node = create_ast_node(NODE_COMMAND, args , NULL, NULL);
+	return node;
 }
 
 /**
  * Fonction d'affichage pour le debug de l'AST
+ * ls -l | wc -l
  */
-void print_ast(t_node_ast *ast, int level) {
+void print_ast(t_node_ast *ast, int level)
+{
     if (!ast) return;
-
     for (int i = 0; i < level; i++)
         printf("  ");
-
     if (ast->type == NODE_COMMAND)
-        printf("CMD: %s\n", ast->args[0]);
+	{
+		printf("CMD: %s\n", ast->args[0]);
+	}
     else if (ast->type == NODE_PIPE)
         printf("PIPE\n");
     else if (ast->type == NODE_R_INPUT)
@@ -132,8 +132,10 @@ void print_ast(t_node_ast *ast, int level) {
     else if (ast->type == NODE_DELIMITER)
         printf("HEREDOC: %s\n", ast->args ? ast->args[0] : "(null)");
 
-    print_ast(ast->left, level + 1);
-    print_ast(ast->right, level + 1);
+	if (ast->left)
+    	print_ast(ast->left, level + 1);
+	if (ast->right)
+    	print_ast(ast->right, level + 1);
 }
 
 void	ast_pipe(t_app *app, t_node_ast *current_node)
@@ -207,7 +209,7 @@ void	ast_r_output(t_app *app, t_node_ast *current_node)
 void	ast_r_output_append(t_app *app, t_node_ast *current_node)
 {
 	int	fd;
-	
+
 	fd = open(current_node->filepath, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
@@ -229,7 +231,7 @@ void	ast_delimiter(t_app *app, t_node_ast *current_node)
 {
 	int	pipe_fd[2];
 	char *input;
-	
+
 	pipe(pipe_fd);
 	input = NULL;
 	app->is_heredoc = 1;

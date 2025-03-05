@@ -16,8 +16,8 @@ void sigint_handler(int sig)
 	else
 	{
 		rl_on_new_line();
-		rl_replace_line("", 0);
 		rl_redisplay();
+		rl_replace_line("", 1);
 	}
 }
 

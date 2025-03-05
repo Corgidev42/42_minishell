@@ -61,8 +61,8 @@ int	main(int argc, char *argv[], char **envp)
 	if (init_app(&app, envp))
 		perror("init app");
 
-	app.first_node = create_test_ast();
-	exec_ast(&app, app.first_node);
-	// minishell(&app);
+	// app.first_node = create_test_ast();
+	// exec_ast(&app, app.first_node);
+	minishell(&app);
 	return (0);
 }
