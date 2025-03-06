@@ -3,8 +3,6 @@
 
 # include "minishell.h"
 
-extern struct s_app	*g_app;
-
 struct	s_app
 {
 	char			**envp;

@@ -1,29 +1,19 @@
 #include "minishell.h"
-#include <signal.h>
-
-t_app *g_app;
+#include <stdlib.h>
 
 // Gestionnaire pour SIGINT (CTRL + C)
 void sigint_handler(int sig, siginfo_t *info, void *context)
 {
 	(void)sig;
 	(void)context;
-	if (g_app->is_heredoc)
-	{
-		g_app->is_heredoc = 0;
-		close(STDIN_FILENO);   // ✅ Ferme STDIN pour interrompre readline()
-	}
+	if (info->si_pid == 0)
+		write(STDOUT_FILENO, "\n", 1);
 	else
 	{
-		if (info->si_pid == 0)
-			write(STDOUT_FILENO, "\n", 1);
-		else
-		{
-			write(STDOUT_FILENO, "\n", 1);
-			rl_replace_line("", 0);
-			rl_on_new_line();
-			rl_redisplay();
-		}
+		write(STDOUT_FILENO, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
 	}
 }
 
@@ -41,7 +31,7 @@ static void set_signal(void)
 	struct sigaction	sa_quit;
 
 	// Configuration de SIGINT (CTRL + C)
-	sa_int.sa_handler = sigint_handler;
+	sa_int.sa_sigaction = sigint_handler;
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = SA_SIGINFO; // Evite les interruptions de readline()
 	sigaction(SIGINT, &sa_int, NULL);
@@ -72,17 +62,17 @@ char	*minishell_getenv(t_app *app, char *str)
 
 int	init_app(t_app *app, char **envp)
 {
-	g_app = app;
 	app->running = 1;
-	app->dquote = 1;
-	app->status = 0;
 	app->is_heredoc = 0;
 	app->is_in_pipe = 0;
+	app->status = 0;
+	app->dquote = 1;
 	app->fd[0] = STDIN_FILENO;
 	app->fd[1] = STDOUT_FILENO;
 	app->pid_current = getpid();
 	app->last_input = NULL;
 	app->first_node = NULL;
+	app->tokenizer.tokens = NULL;
 	app->tokenizer.t_count = 0;
 
 	// Copie de l'environnement
