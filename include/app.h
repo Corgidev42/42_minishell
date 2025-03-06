@@ -18,9 +18,36 @@ struct	s_app
 	t_tokenizer		tokenizer;
 };
 
-int		init_app(t_app *app, char **envp);
-// void	sigint_handler(int sig);
+/**
+ * @brief Gestionnaire pour SIGINT (CTRL + C).
+ *
+ * @param sig Numéro du signal reçu.
+ * @param info Informations sur le signal.
+ * @param context Contexte du signal.
+ */
+void	sigint_handler(int sig, siginfo_t *info, void *context);
+
+/**
+ * @brief Gestionnaire pour SIGQUIT (CTRL + \).
+ *
+ * @param sig Numéro du signal reçu.
+ */
 void	sigquit_handler(int sig);
-char	*minishell_getenv(t_app *app, char *str);
+
+/**
+ * @brief Initialise les valeurs par défaut de la structure t_app.
+ *
+ * @param app Pointeur sur la structure principale de l'application.
+ */
+void	init_brut(t_app *app);
+
+/**
+ * @brief Initialise la structure de l'application et copie l'environnement.
+ *
+ * @param app Pointeur sur la structure principale de l'application.
+ * @param envp Tableau des variables d'environnement du système.
+ * @return int Retourne 0 en cas de succès, 1 en cas d'erreur d'allocation.
+ */
+int		init_app(t_app *app, char **envp);
 
 #endif
