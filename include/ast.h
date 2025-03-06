@@ -24,9 +24,8 @@ struct			s_node_ast
 };
 
 t_node_ast	*prepare_ast(t_app *app, int start, int end);
-int		exec_ast(t_app *app, t_node_ast *current_node);
-void	print_ast(t_node_ast *ast, int level);
-void	clean_ast(t_node_ast *node);
-
+int			exec_ast(t_app *app, t_node_ast *current_node);
+void		print_ast(t_node_ast *ast, int level);
+void		clean_ast(t_node_ast *node);
 
 #endif
