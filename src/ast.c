@@ -234,13 +234,6 @@ void	ast_delimiter(t_app *app, t_node_ast *current_node)
 
 	app->is_heredoc = 1;
 	read_input(app, &input, current_node->delimiter);
-	if (!app->is_heredoc) // ✅ Vérifier si `CTRL + C` a été pressé
-	{
-		close(pipe_fd[0]);
-		close(pipe_fd[1]);
-		return;
-	}
-
 	if (input)
 	{
 		write(pipe_fd[1], input, strlen(input));

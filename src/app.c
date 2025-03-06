@@ -12,7 +12,6 @@ void sigint_handler(int sig, siginfo_t *info, void *context)
 	{
 		g_app->is_heredoc = 0;
 		close(STDIN_FILENO);   // ✅ Ferme STDIN pour interrompre readline()
-		write(1, "\nHeredoc annulé\n", 16);
 	}
 	else
 	{
