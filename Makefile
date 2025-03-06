@@ -1,6 +1,6 @@
 # 🛠 Compiler et flags
 CC = gcc
-CFLAGS =
+CFLAGS = -Wall -Werror -Wextra
 LDFLAGS = -lreadline
 
 # 🏆 Nom du projet

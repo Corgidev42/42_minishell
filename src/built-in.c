@@ -27,6 +27,7 @@ int	exec_echo(t_app *app, t_node_ast *ast)
 // Fonction cd with no options
 int	exec_cd(t_app *app, t_node_ast *ast)
 {
+	(void)app;
 	if (ast->args[1] == NULL)
 	{
 		if (chdir(getenv("HOME")) == -1)
@@ -48,6 +49,7 @@ int	exec_cd(t_app *app, t_node_ast *ast)
 // Fonction pwd with no options
 int	exec_pwd(t_app *app, t_node_ast *ast)
 {
+	(void)ast;
 	char	cwd[128];
 
 	ft_putstr_fd(getcwd(cwd, 128), app->fd[1]);
@@ -67,7 +69,7 @@ int	exec_export(t_app *app, t_node_ast *ast)
 	}
 	len_to_equal = ft_strchr(ast->args[1], '=') - ast->args[1];
 	i = 0;
-	while (app->envp[i] && ft_strncmp(ast->args[1], app->envp[i], len_to_equal) != 0)
+	while (app->envp[i] && (ft_strncmp(ast->args[1], app->envp[i], len_to_equal) != 0 || app->envp[i][len_to_equal] != '='))
 		i++;
 	if (app->envp[i] == NULL)
 	{
@@ -119,6 +121,7 @@ int exec_unset(t_app *app, t_node_ast *ast)
 // Fonction env with no options
 int	exec_env(t_app *app, t_node_ast *ast)
 {
+	(void)ast;
 	int	i;
 
 	i = 0;

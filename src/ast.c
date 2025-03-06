@@ -38,10 +38,10 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 	while (i <= end)
 	{
 		int priority = get_operator_priority(app->tokenizer.tokens[i]);
-		if (priority != -1
-			&& ((priority == 1 && priority < min_priority))
+		if ((priority != -1)
+			&& ((priority == 1 && priority < min_priority)
 			|| (priority == 2 && priority <= min_priority)
-			|| (priority == 3 && priority <= min_priority))
+			|| (priority == 3 && priority <= min_priority)))
 		{
 			min_priority = priority;
 			op_index = i;
@@ -51,10 +51,8 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 	// Si un opérateur a été trouvé, créer le nœud correspondant
 	if (op_index != -1)
 	{
-		t_node_type type;
 		if (ft_strcmp(app->tokenizer.tokens[op_index], "|") == 0)
 		{
-			type = NODE_PIPE;
 			t_node_ast *node = create_ast_node(NODE_PIPE, NULL, NULL, NULL);
 			node->left = prepare_ast(app, start, op_index - 1);
 			node->right = prepare_ast(app, op_index + 1, end);
@@ -62,7 +60,6 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 		}
 		else if (ft_strcmp(app->tokenizer.tokens[op_index], ">") == 0)
 		{
-			type = NODE_R_OUTPUT;
 			t_node_ast *node = create_ast_node(NODE_R_OUTPUT, NULL, ft_strdup(app->tokenizer.tokens[op_index + 1]), NULL);
 			node->left = prepare_ast(app, start, op_index - 1);
 			node->right = prepare_ast(app, op_index + 2, end);
@@ -70,7 +67,6 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 		}
 		else if (ft_strcmp(app->tokenizer.tokens[op_index], ">>") == 0)
 		{
-			type = NODE_R_OUTPUT_APPEND;
 			t_node_ast *node = create_ast_node(NODE_R_OUTPUT_APPEND, NULL, ft_strdup(app->tokenizer.tokens[op_index + 1]), NULL);
 			node->left = prepare_ast(app, start, op_index - 1);
 			node->right = prepare_ast(app, op_index + 2, end);
@@ -78,7 +74,6 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 		}
 		else if (ft_strcmp(app->tokenizer.tokens[op_index], "<") == 0)
 		{
-			type = NODE_R_INPUT;
 			t_node_ast *node = create_ast_node(NODE_R_INPUT, NULL, ft_strdup(app->tokenizer.tokens[op_index + 1]), NULL);
 			node->left = prepare_ast(app, start, op_index - 1);
 			node->right = prepare_ast(app, op_index + 2, end);
@@ -86,7 +81,6 @@ t_node_ast	*prepare_ast(t_app *app, int start, int end)
 		}
 		else if (ft_strcmp(app->tokenizer.tokens[op_index], "<<") == 0)
 		{
-			type = NODE_DELIMITER;
 			t_node_ast *node = create_ast_node(NODE_DELIMITER, NULL, NULL, ft_strdup(app->tokenizer.tokens[op_index + 1]));
 			node->left = prepare_ast(app, start, op_index - 1);
 			node->right = prepare_ast(app, op_index + 2, end);
@@ -135,6 +129,8 @@ void print_ast(t_node_ast *ast, int level)
         printf("APPEND: %s\n", ast->filepath);
     else if (ast->type == NODE_DELIMITER)
         printf("HEREDOC: %s\n", ast->delimiter);
+	else
+	{}
 
 	if (ast->left)
     	print_ast(ast->left, level + 1);
@@ -258,6 +254,8 @@ char *search_file(t_app *app, char *command)
 	char	**paths;
 	char	*file;
 
+	path = NULL;
+	paths = NULL;
 	i = 0;
 	while (app->envp[i])
 	{
@@ -268,9 +266,10 @@ char *search_file(t_app *app, char *command)
 		}
 		i++;
 	}
-	paths = ft_split(path, ':');
+	if (path)
+		paths = ft_split(path, ':');
 	i = 0;
-	while (paths[i])
+	while (paths && paths[i])
 	{
 		file = ft_strjoin(paths[i], "/");
 		file = ft_strjoin(file, command);
@@ -283,8 +282,10 @@ char *search_file(t_app *app, char *command)
 		free(file);
 		i++;
 	}
-	free(path);
-	free(paths);
+	if (path)
+		free(path);
+	if (paths)
+		free(paths);
 	return (command);
 }
 
@@ -293,6 +294,7 @@ void	ast_command(t_app *app, t_node_ast *current_node)
 	int	pid;
 	int	status;
 
+	status = 0;
 	if (is_built_in_function(current_node))
 	{
 		app->status = exec_built_in(app, current_node);

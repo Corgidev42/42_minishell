@@ -3,8 +3,6 @@
 
 # include "minishell.h"
 
-extern struct s_app	*g_app;
-
 struct	s_app
 {
 	char			**envp;
@@ -15,6 +13,7 @@ struct	s_app
 	int				dquote;
 	int				fd[2];
 	int				pid_current;
+	char			*last_input;
 	t_node_ast		*first_node;
 	t_tokenizer		tokenizer;
 };
