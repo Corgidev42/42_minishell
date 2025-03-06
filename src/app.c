@@ -80,6 +80,7 @@ int	init_app(t_app *app, char **envp)
 	app->fd[0] = STDIN_FILENO;
 	app->fd[1] = STDOUT_FILENO;
 	app->pid_current = getpid();
+	app->last_input = NULL;
 	app->first_node = NULL;
 	app->tokenizer.t_count = 0;
 

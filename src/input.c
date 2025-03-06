@@ -44,8 +44,13 @@ char *read_input(t_app *app, char **input, char *delimiter)
 			app->running = 0; // Quitter le shell proprement
 			return NULL;
 		}
-		if (*input)
+		if (*input && (!app->last_input || (ft_strcmp(*input, app->last_input) != 0)))
+		{
+			if (app->last_input)
+				free(app->last_input);
+			app->last_input = ft_strdup(*input);
 			add_history(*input);
+		}
 		if (ft_strcmp(*input,"history -c") == 0)
 		{
 			rl_clear_history();
