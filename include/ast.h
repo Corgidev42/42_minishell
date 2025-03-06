@@ -28,6 +28,7 @@ t_node_ast	*create_ast_node(t_node_type type,
 t_node_ast	*create_ast_node_from_operator(t_app *app, int start, int end, int op_index);
 t_node_ast	*create_ast_node_from_command(t_app *app, int start, int end);
 t_node_ast	*prepare_ast(t_app *app, int start, int end);
+void	clean_ast(t_node_ast *node);
 
 int		exec_ast(t_app *app, t_node_ast *current_node);
 void	ast_command(t_app *app, t_node_ast *current_node);
