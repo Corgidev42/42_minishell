@@ -89,8 +89,31 @@ int	exec_export(t_app *app, t_node_ast *ast)
 	return (0);
 }
 
-int	exec_unset(t_app *app, t_node_ast *ast)
+int exec_unset(t_app *app, t_node_ast *ast)
 {
+	if (!ast->args[1]) // Si aucun argument, ne rien faire
+		return (0);
+
+	int i = 0;
+	int len_to_equal = ft_strlen(ast->args[1]);
+
+	while (app->envp[i])
+	{
+		if (ft_strncmp(ast->args[1], app->envp[i], len_to_equal) == 0 && app->envp[i][len_to_equal] == '=')
+			break;
+		i++;
+	}
+
+	if (app->envp[i]) // Si trouvé
+	{
+		free(app->envp[i]); // Supprime la variable
+		while (app->envp[i]) // Décale les suivantes
+		{
+			app->envp[i] = app->envp[i + 1];
+			i++;
+		}
+	}
+
 	return (0);
 }
 // Fonction env with no options
