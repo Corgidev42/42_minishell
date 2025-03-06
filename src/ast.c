@@ -256,7 +256,6 @@ char *search_file(t_app *app, char *command)
 	char	**paths;
 	char	*file;
 
-	// TODO : Lorsque l'on aura nos built in passer par les notre d'abord
 	i = 0;
 	while (app->envp[i])
 	{
