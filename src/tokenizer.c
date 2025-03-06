@@ -25,6 +25,25 @@ char	*ft_strndup(const char *s, size_t n)
 	return (str);
 }
 
+char	*minishell_getenv(t_app *app, char *str)
+{
+	int	i;
+
+	i = 0;
+	if (ft_strcmp(str, "?") == 0)
+	{
+		return (ft_itoa(app->status));
+	}
+	while (app->envp[i])
+	{
+		if (ft_strncmp(app->envp[i], str, ft_strlen(str)) == 0)
+			if (app->envp[i][ft_strlen(str)] == '=')
+				return (app->envp[i] + ft_strlen(str) + 1);
+		i++;
+	}
+	return (NULL);
+}
+
 char	*ft_strncpy(char *dst, const char *src, size_t len)
 {
 	size_t	i;
