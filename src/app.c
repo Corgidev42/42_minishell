@@ -4,9 +4,10 @@
 t_app *g_app;
 
 // Gestionnaire pour SIGINT (CTRL + C)
-void sigint_handler(int sig)
+void sigint_handler(int sig, siginfo_t *info, void *context)
 {
 	(void)sig;
+	(void)context;
 	if (g_app->is_heredoc)
 	{
 		g_app->is_heredoc = 0;
@@ -15,10 +16,15 @@ void sigint_handler(int sig)
 	}
 	else
 	{
-		write(STDOUT_FILENO, "\n", 1);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
+		if (info->si_pid == 0)
+			write(STDOUT_FILENO, "\n", 1);
+		else
+		{
+			write(STDOUT_FILENO, "\n", 1);
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			rl_redisplay();
+		}
 	}
 }
 
@@ -37,7 +43,7 @@ static void set_signal(t_app *app)
 	// Configuration de SIGINT (CTRL + C)
 	sa_int.sa_handler = sigint_handler;
 	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = SA_RESTART; // Evite les interruptions de readline()
+	sa_int.sa_flags = SA_SIGINFO; // Evite les interruptions de readline()
 	sigaction(SIGINT, &sa_int, NULL);
 
 	// Configuration de SIGQUIT (CTRL + \)

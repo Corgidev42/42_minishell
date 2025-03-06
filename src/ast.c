@@ -299,6 +299,7 @@ void	ast_command(t_app *app, t_node_ast *current_node)
 	pid = fork();
 	if (pid == 0) // Processus enfant
 	{
+		app->pid_current = pid;
 		// Appliquer les redirections avant d'exécuter la commande
 		if (app->fd[0] != STDIN_FILENO)
 		{
@@ -326,7 +327,10 @@ void	ast_command(t_app *app, t_node_ast *current_node)
 
 		// Attendre la fin de la commande
 		waitpid(pid, &status, 0);
-		app->status = WEXITSTATUS(status);
+		if (WIFSIGNALED(status))
+			app->status = WTERMSIG(status) + 128;
+		else if (WIFEXITED(status))
+			app->status = WEXITSTATUS(status);
 	}
 }
 
