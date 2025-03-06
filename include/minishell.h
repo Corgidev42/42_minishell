@@ -5,6 +5,7 @@ typedef struct	s_app		t_app;
 typedef enum	e_node_type	t_node_type;
 typedef struct	s_tokenizer	t_tokenizer;
 typedef struct	s_node_ast	t_node_ast;
+typedef struct	s_help_token	t_help_token;
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -15,6 +16,7 @@ typedef struct	s_node_ast	t_node_ast;
 # include <sys/wait.h>
 # include <fcntl.h>
 # include "libft.h"
+# include "utils.h"
 # include "tokenizer.h"
 # include "ast.h"
 # include "libft.h"
