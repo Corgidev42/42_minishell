@@ -14,13 +14,13 @@ int	exec_echo(t_app *app, t_node_ast *ast)
 	}
 	while (ast->args[i])
 	{
-		ft_putstr_fd(ast->args[i], STDOUT_FILENO);
+		ft_putstr_fd(ast->args[i], app->fd[1]);
 		if (ast->args[i + 1])
-			ft_putstr_fd(" ", STDOUT_FILENO);
+			ft_putstr_fd(" ", app->fd[1]);
 		i++;
 	}
 	if (!n_flag)
-		ft_putstr_fd("\n", STDOUT_FILENO);
+		ft_putstr_fd("\n", app->fd[1]);
 	return (0);
 }
 
@@ -50,8 +50,8 @@ int	exec_pwd(t_app *app, t_node_ast *ast)
 {
 	char	cwd[128];
 
-	ft_putstr_fd(getcwd(cwd, 128), STDOUT_FILENO);
-	ft_putstr_fd("\n", STDOUT_FILENO);
+	ft_putstr_fd(getcwd(cwd, 128), app->fd[1]);
+	ft_putstr_fd("\n", app->fd[1]);
 	return (0);
 }
 // Fonction export with no options
@@ -124,8 +124,8 @@ int	exec_env(t_app *app, t_node_ast *ast)
 	i = 0;
 	while (app->envp[i])
 	{
-		ft_putstr_fd(app->envp[i], STDOUT_FILENO);
-		ft_putstr_fd("\n", STDOUT_FILENO);
+		ft_putstr_fd(app->envp[i], app->fd[1]);
+		ft_putstr_fd("\n", app->fd[1]);
 		i++;
 	}
 	return (0);

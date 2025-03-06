@@ -95,6 +95,6 @@ relibft:
 # 🚀 Lancer le programme
 run: all
 	@clear
-	@./$(PROJECT_NAME) || true
+	@./$(PROJECT_NAME)
 
 .PHONY: all clean fclean re relibft run

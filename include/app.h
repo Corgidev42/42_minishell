@@ -21,5 +21,6 @@ struct	s_app
 int		init_app(t_app *app, char **envp);
 // void	sigint_handler(int sig);
 void	sigquit_handler(int sig);
+char	*minishell_getenv(t_app *app, char *str);
 
 #endif
