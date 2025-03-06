@@ -12,7 +12,6 @@ void sigint_handler(int sig, siginfo_t *info, void *context)
 	{
 		g_app->is_heredoc = 0;
 		close(STDIN_FILENO);   // ✅ Ferme STDIN pour interrompre readline()
-		write(1, "\nHeredoc annulé\n", 16);
 	}
 	else
 	{
@@ -32,10 +31,11 @@ void sigint_handler(int sig, siginfo_t *info, void *context)
 void sigquit_handler(int sig)
 {
 	(void)sig;
+	rl_redisplay();
 }
 
 // Configuration des signaux pour le shell interactif
-static void set_signal(t_app *app)
+static void set_signal(void)
 {
 	struct sigaction	sa_int;
 	struct sigaction	sa_quit;
@@ -102,6 +102,6 @@ int	init_app(t_app *app, char **envp)
 	}
 	app->envp[i] = NULL;
 
-	set_signal(app);
+	set_signal();
 	return 0;
 }

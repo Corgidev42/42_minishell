@@ -67,7 +67,7 @@ int	exec_export(t_app *app, t_node_ast *ast)
 	}
 	len_to_equal = ft_strchr(ast->args[1], '=') - ast->args[1];
 	i = 0;
-	while (app->envp[i] && ft_strncmp(ast->args[1], app->envp[i], len_to_equal) != 0)
+	while (app->envp[i] && (ft_strncmp(ast->args[1], app->envp[i], len_to_equal) != 0 || app->envp[i][len_to_equal] != '='))
 		i++;
 	if (app->envp[i] == NULL)
 	{
