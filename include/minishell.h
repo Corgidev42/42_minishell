@@ -19,6 +19,11 @@
 # include "app.h"
 # include "input.h"
 
+/**
+ * @brief Boucle principale du shell minishell.
+ *
+ * @param app Structure principale de l'application.
+ */
 void	minishell(t_app *app);
 
 #endif

@@ -1,7 +1,6 @@
 #include "minishell.h"
 #include <stdlib.h>
 
-// Gestionnaire pour SIGINT (CTRL + C)
 void	sigint_handler(int sig, siginfo_t *info, void *context)
 {
 	(void)sig;
@@ -17,14 +16,15 @@ void	sigint_handler(int sig, siginfo_t *info, void *context)
 	}
 }
 
-// Gestionnaire pour SIGQUIT (CTRL + \)
 void	sigquit_handler(int sig)
 {
 	(void)sig;
 	rl_redisplay();
 }
 
-// Configuration des signaux pour le shell interactif
+/**
+ * @brief Configure les signaux pour le shell interactif.
+ */
 static void	set_signal(void)
 {
 	struct sigaction	sa_int;
