@@ -48,22 +48,6 @@ static void	add_token(t_tokenizer *tokenizer, char *start, int length)
 	tokenizer->t_count++;
 }
 
-char *minishell_getenv(t_app *app, char *str)
-{
-	int i = 0;
-	if (ft_strcmp(str, "?") == 0)
-	{
-		return (ft_itoa(app->status));
-	}
-	while (app->envp[i])
-	{
-		if (ft_strncmp(app->envp[i], str, ft_strlen(str)) == 0)
-			return (app->envp[i] + ft_strlen(str) + 1);
-		i++;
-	}
-	return (NULL);
-}
-
 
 static void	handle_env_variable(t_app *app, const char **ptr, char *buffer, int *buf_index)
 {

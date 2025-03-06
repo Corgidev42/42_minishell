@@ -53,6 +53,22 @@ static void set_signal(t_app *app)
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
+char	*minishell_getenv(t_app *app, char *str)
+{
+	int i = 0;
+	if (ft_strcmp(str, "?") == 0)
+	{
+		return (ft_itoa(app->status));
+	}
+	while (app->envp[i])
+	{
+		if (ft_strncmp(app->envp[i], str, ft_strlen(str)) == 0)
+			if (app->envp[i][ft_strlen(str)] == '=')
+				return (app->envp[i] + ft_strlen(str) + 1);
+		i++;
+	}
+	return (NULL);
+}
 
 int	init_app(t_app *app, char **envp)
 {

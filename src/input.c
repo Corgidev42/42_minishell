@@ -13,7 +13,7 @@ char *read_input(t_app *app, char **input, char *delimiter)
 		app->is_heredoc = 1;
 		while (1)
 		{
-			line = readline("heredoc> "); // Affiche le prompt heredoc
+			line = readline("heredoc>"); // Affiche le prompt heredoc
 			if (!line) // CTRL + D détecté
 			{
 				ft_printf("\nwarning: here-document delimited by end-of-file\n");
@@ -37,21 +37,21 @@ char *read_input(t_app *app, char **input, char *delimiter)
 		close(stdin_backup);
 	}
 	else
+	{
+		*input = readline("minishell> "); // Affiche le prompt minishell
+		if (!*input) // CTRL + D détecté
 		{
-			*input = readline("minishell> "); // Affiche le prompt
-			if (!*input) // CTRL + D détecté
-			{
-				app->running = 0; // Quitter le shell proprement
-				return NULL;
-			}
-			if (*input)
-				add_history(*input);
-			if (ft_strcmp(*input,"history -c") == 0)
-			{
-				rl_clear_history();
-				ft_printf("Historique effacé !\n");
-			}
+			app->running = 0; // Quitter le shell proprement
+			return NULL;
 		}
+		if (*input)
+			add_history(*input);
+		if (ft_strcmp(*input,"history -c") == 0)
+		{
+			rl_clear_history();
+			ft_printf("Historique effacé !\n");
+		}
+	}
 	// ft_printf("Contenu de input : %s\n", *input);
 	return *input;
 }

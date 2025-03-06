@@ -294,6 +294,10 @@ void	ast_command(t_app *app, t_node_ast *current_node)
 	if (is_built_in_function(current_node))
 	{
 		app->status = exec_built_in(app, current_node);
+		if (app->fd[0] != STDIN_FILENO)
+			close(app->fd[0]);
+		if (app->fd[1] != STDOUT_FILENO)
+			close(app->fd[1]);
 		return;
 	}
 	pid = fork();
@@ -347,8 +351,6 @@ int		exec_ast(t_app *app, t_node_ast *current_node)
 	if (!current_node)
 	return (1);
 
-	if (current_node->type == NODE_COMMAND && ft_strcmp(current_node->args[0], "exit") == 0)
-		exec_exit(app, current_node);
 	if (current_node->type == NODE_PIPE)
 		ast_pipe(app, current_node);
 	else if (current_node->type == NODE_R_INPUT)
