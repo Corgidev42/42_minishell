@@ -51,3 +51,16 @@ char	*minishell_getenv(t_app *app, char *str)
 	}
 	return (NULL);
 }
+
+int	get_operator_priority(char *token)
+{
+	if (ft_strcmp(token, "<<") == 0)
+		return (3);
+	if (ft_strcmp(token, "<") == 0)
+		return (3);
+	if (ft_strcmp(token, ">") == 0 || ft_strcmp(token, ">>") == 0)
+		return (2);
+	if (ft_strcmp(token, "|") == 0)
+		return (1);
+	return (-1);
+}
