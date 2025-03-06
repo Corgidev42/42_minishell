@@ -48,7 +48,22 @@ static void	add_token(t_tokenizer *tokenizer, char *start, int length)
 	tokenizer->t_count++;
 }
 
-static void	handle_env_variable(const char **ptr, char *buffer, int *buf_index)
+char *minishell_getenv(t_app *app, char *str)
+{
+	int i = 0;
+	if (ft_strcmp(str, "?") == 0)
+		return (ft_itoa(app->status));
+	while (app->envp[i])
+	{
+		if (ft_strncmp(app->envp[i], str, ft_strlen(str)) == 0)
+			return (app->envp[i] + ft_strlen(str) + 1);
+		i++;
+	}
+	return (NULL);
+}
+
+
+static void	handle_env_variable(t_app *app, const char **ptr, char *buffer, int *buf_index)
 {
 	const char	*var_start;
 	char		var_name[256];
@@ -59,7 +74,7 @@ static void	handle_env_variable(const char **ptr, char *buffer, int *buf_index)
 		var_start++;
 	ft_strncpy(var_name, *ptr + 1, var_start - (*ptr + 1));
 	var_name[var_start - (*ptr + 1)] = '\0';
-	env_value = getenv(var_name);
+	env_value = minishell_getenv(app, var_name);
 	if (env_value)
 	{
 		ft_strncpy(buffer + *buf_index, env_value, ft_strlen(env_value));
@@ -102,7 +117,7 @@ int		tokenize(t_app *app, char *input)
 			}
 		}
 		else if (*ptr == '$' && !in_single_quote)
-			handle_env_variable(&ptr, buffer, &buf_index);
+			handle_env_variable(app, &ptr, buffer, &buf_index);
 		else
 			process_character(&ptr, buffer, &buf_index, &in_single_quote, &in_double_quote);
 	}

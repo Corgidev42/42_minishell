@@ -51,17 +51,32 @@ static void set_signal(t_app *app)
 int	init_app(t_app *app, char **envp)
 {
 	g_app = app;
-	app->envp = envp;
 	app->running = 1;
 	app->dquote = 1;
 	app->status = 0;
 	app->is_heredoc = 0;
 	app->fd[0] = STDIN_FILENO;
-	// app->fd[1] = open("out.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	app->fd[1] = STDOUT_FILENO;
 	app->pid_current = getpid();
 	app->first_node = NULL;
 	app->tokenizer.t_count = 0;
+
+	// Copie de l'environnement
+	int i = 0;
+	while (envp[i])
+		i++;
+	app->envp = malloc(sizeof(char *) * (i + 1));
+	if (!app->envp)
+		return 1;
+	i = 0;
+	while (envp[i])
+	{
+		app->envp[i] = ft_strdup(envp[i]);
+		if (!app->envp[i])
+			return 1;
+		i++;
+	}
+	app->envp[i] = NULL;
 
 	set_signal(app);
 	return 0;
