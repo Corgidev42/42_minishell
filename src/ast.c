@@ -336,6 +336,8 @@ int		exec_ast(t_app *app, t_node_ast *current_node)
 	if (!current_node)
 	return (1);
 
+	if (current_node->type == NODE_COMMAND && ft_strcmp(current_node->args[0], "exit") == 0)
+		exec_exit(app, current_node);
 	if (current_node->type == NODE_PIPE)
 		ast_pipe(app, current_node);
 	else if (current_node->type == NODE_R_INPUT)

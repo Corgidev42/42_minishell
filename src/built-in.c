@@ -49,8 +49,15 @@ int	exec_env(t_app *app, t_node_ast *ast)
 	return (0);
 }
 
-int	exec_exit(t_app *app, t_node_ast *ast)
+int	exec_exit(t_app *app, t_node_ast *current_node)
 {
+	int exit_code = app->status; // Par défaut, utiliser le dernier code de retour
+	if (current_node->args[1])  // Si un argument est fourni, l'utiliser comme code de sortie
+		exit_code = ft_atoi(current_node->args[1]);
+
+	clean_ast(current_node);  // Libérer l'AST avant de quitter
+	printf("Exiting minishell with code %d\n", exit_code);
+	exit(exit_code);
 	return (0);
 }
 

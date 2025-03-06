@@ -5,5 +5,6 @@
 
 int	is_built_in_function(t_node_ast *ast);
 int	exec_built_in(t_app *app, t_node_ast *ast);
+int	exec_exit(t_app *app, t_node_ast *current_node);
 
 #endif
