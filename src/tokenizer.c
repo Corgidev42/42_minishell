@@ -52,7 +52,9 @@ char *minishell_getenv(t_app *app, char *str)
 {
 	int i = 0;
 	if (ft_strcmp(str, "?") == 0)
+	{
 		return (ft_itoa(app->status));
+	}
 	while (app->envp[i])
 	{
 		if (ft_strncmp(app->envp[i], str, ft_strlen(str)) == 0)
@@ -70,7 +72,7 @@ static void	handle_env_variable(t_app *app, const char **ptr, char *buffer, int 
 	char		*env_value;
 
 	var_start = *ptr + 1;
-	while (isalnum(*var_start) || *var_start == '_')
+	while (isalnum(*var_start) || *var_start == '_' || *var_start == '?')
 		var_start++;
 	ft_strncpy(var_name, *ptr + 1, var_start - (*ptr + 1));
 	var_name[var_start - (*ptr + 1)] = '\0';
