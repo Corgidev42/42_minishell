@@ -15,10 +15,7 @@ char *read_input(t_app *app, char **input, char *delimiter)
 		{
 			line = readline("heredoc>"); // Affiche le prompt heredoc
 			if (!line) // CTRL + D détecté
-			{
-				ft_printf("\nwarning: here-document delimited by end-of-file\n");
 				break; // Quitte la boucle heredoc proprement
-			}
 			if (ft_strcmp(line, delimiter) == 0) // Si on tape le délimiteur, on arrête
 			{
 				free(line);
