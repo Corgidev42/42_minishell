@@ -19,7 +19,7 @@ struct	s_app
 };
 
 int		init_app(t_app *app, char **envp);
-void	sigint_handler(int sig);
+// void	sigint_handler(int sig);
 void	sigquit_handler(int sig);
 
 #endif
