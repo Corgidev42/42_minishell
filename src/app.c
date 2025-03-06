@@ -77,6 +77,7 @@ int	init_app(t_app *app, char **envp)
 	app->dquote = 1;
 	app->status = 0;
 	app->is_heredoc = 0;
+	app->is_in_pipe = 0;
 	app->fd[0] = STDIN_FILENO;
 	app->fd[1] = STDOUT_FILENO;
 	app->pid_current = getpid();

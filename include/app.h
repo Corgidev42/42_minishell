@@ -10,6 +10,7 @@ struct	s_app
 	char			**envp;
 	int				running;
 	int				is_heredoc;
+	int				is_in_pipe;
 	int				status;
 	int				dquote;
 	int				fd[2];

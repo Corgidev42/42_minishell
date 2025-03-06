@@ -145,6 +145,7 @@ void print_ast(t_node_ast *ast, int level)
 void	ast_pipe(t_app *app, t_node_ast *current_node)
 {
 	int	pipe_fd[2];
+	app->is_in_pipe = 1;
 
 	pipe(pipe_fd);
 
@@ -162,6 +163,7 @@ void	ast_pipe(t_app *app, t_node_ast *current_node)
 
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
+	app->is_in_pipe = 0;
 }
 
 void	ast_r_input(t_app *app, t_node_ast *current_node)
@@ -176,7 +178,7 @@ void	ast_r_input(t_app *app, t_node_ast *current_node)
 	}
 
 	// Modifier fd pour que STDIN lise depuis le fichier
-	if (app->fd[0] == STDIN_FILENO)
+	if (app->fd[0] == STDIN_FILENO || app->is_in_pipe)
 		app->fd[0] = fd;
 
 	// Continuer avec la commande associée
@@ -195,7 +197,7 @@ void	ast_r_output(t_app *app, t_node_ast *current_node)
 	}
 
 	// Modifier fd pour que STDOUT écrive dans le fichier
-	if (app->fd[1] == STDOUT_FILENO)
+	if (app->fd[1] == STDOUT_FILENO || app->is_in_pipe)
 		app->fd[1] = fd;
 
 	// Exécuter la commande associée
@@ -214,7 +216,7 @@ void	ast_r_output_append(t_app *app, t_node_ast *current_node)
 	}
 
 	// Modifier fd pour que STDOUT ajoute dans le fichier
-	if (app->fd[1] == STDOUT_FILENO)
+	if (app->fd[1] == STDOUT_FILENO || app->is_in_pipe)
 		app->fd[1] = fd;
 
 	// Exécuter la commande associée
@@ -232,6 +234,13 @@ void	ast_delimiter(t_app *app, t_node_ast *current_node)
 
 	app->is_heredoc = 1;
 	read_input(app, &input, current_node->delimiter);
+	if (!app->is_heredoc) // ✅ Vérifier si `CTRL + C` a été pressé
+	{
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		return;
+	}
+
 	if (input)
 	{
 		write(pipe_fd[1], input, strlen(input));
@@ -240,7 +249,7 @@ void	ast_delimiter(t_app *app, t_node_ast *current_node)
 	close(pipe_fd[1]);
 
 	// Modifier fd pour que STDIN lise depuis le pipe
-	if (app->fd[0] == STDIN_FILENO)
+	if (app->fd[0] == STDIN_FILENO || app->is_in_pipe)
 		app->fd[0] = pipe_fd[0];
 
 	// Exécuter la commande qui doit lire depuis le heredoc
