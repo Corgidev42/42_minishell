@@ -312,6 +312,8 @@ void	ast_command(t_app *app, t_node_ast *current_node)
 			close(app->fd[1]); // Fermer après duplication
 		}
 
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		// Exécuter la commande
 		execve(search_file(app, current_node->args[0]), current_node->args, app->envp);
 		perror("minishell");
@@ -328,7 +330,13 @@ void	ast_command(t_app *app, t_node_ast *current_node)
 		// Attendre la fin de la commande
 		waitpid(pid, &status, 0);
 		if (WIFSIGNALED(status))
-			app->status = WTERMSIG(status) + 128;
+		{
+			// printf("Processus %d terminé par signal %d\n", pid, WTERMSIG(status));
+			if (WTERMSIG(status) == SIGQUIT)
+				app->status = 128 + WTERMSIG(status);
+			else
+				app->status = 130;
+		}
 		else if (WIFEXITED(status))
 			app->status = WEXITSTATUS(status);
 	}
