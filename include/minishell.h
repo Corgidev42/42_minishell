@@ -10,8 +10,8 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include "libft.h"
-# include "utils.h"
 # include "struct.h"
+# include "utils.h"
 # include "tokenizer.h"
 # include "ast.h"
 # include "libft.h"
