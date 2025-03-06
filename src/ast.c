@@ -292,6 +292,11 @@ void	ast_command(t_app *app, t_node_ast *current_node)
 	int	pid;
 	int	status;
 
+	if (is_built_in_function(current_node))
+	{
+		exec_built_in(app, current_node);
+		return;
+	}
 	pid = fork();
 	if (pid == 0) // Processus enfant
 	{

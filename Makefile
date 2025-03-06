@@ -24,20 +24,13 @@ endif
 # 📂 Répertoires
 SRC_DIR = src
 OBJ_DIR = obj
-BIN_DIR = bin
 INCLUDE_DIR = include
-
-SRC_BUILT_IN = $(SRC_DIR)/built-in
-
-BUILT_IN_FILES = $(wildcard $(SRC_BUILT_IN)/*.c)
-
-BUILT_IN_OBJ_FILES = $(patsubst $(SRC_BUILT_IN)/%.c, $(BIN_DIR)/%, $(BUILT_IN_FILES))
 
 # 📌 Inclure les fichiers headers
 INCLUDES = -I$(INCLUDE_DIR) $(LIBFT_INCLUDE)
 
 # 🔍 Trouver tous les fichiers source (.c)
-SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
+SRC_FILES = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/*/*.c)
 
 # 🏗️ Création de la liste des fichiers objets correspondants
 OBJ_FILES = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
@@ -52,7 +45,7 @@ LIBFT_INCLUDE = -I$(LIBFT_DIR)/include
 all: $(PROJECT_NAME)
 
 # 🏗️ Création de l'exécutable
-$(PROJECT_NAME): $(LIBFT) $(OBJ_FILES) $(BUILT_IN_OBJ_FILES)
+$(PROJECT_NAME): $(LIBFT) $(OBJ_FILES)
 	$(CC) $(CFLAGS) $(OS_FLAGS) $(INCLUDES) $(OBJ_FILES) $(LDFLAGS) $(LIBFT) -o $@
 	@echo "✅ Compilation terminée !"
 
@@ -62,17 +55,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
 	$(CC) -c $(CFLAGS) $(INCLUDES) $< -o $@
 	@echo "🔨 Compilé : $< -> $@"
 
-$(BIN_DIR)/%: $(SRC_BUILT_IN)/%.c | $(BIN_DIR) $(LIBFT)
-	@mkdir -p $(dir $@)  # Création des sous-dossiers si nécessaire
-	$(CC) $(CFLAGS) $(OS_FLAGS) $(INCLUDES) $(LDFLAGS) $< $(LIBFT) -o $@
-	@echo "🔨 Compilé : $< -> $@"
-
 # 📂 Création du dossier obj s'il n'existe pas
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
-
-$(BIN_DIR):
-	mkdir -p $(BIN_DIR)
 
 # 📦 Clonage de libft si nécessaire (ne se lance que si le dossier n'existe pas)
 $(LIBFT_DIR):
@@ -89,7 +74,6 @@ $(LIBFT): | $(LIBFT_DIR)
 
 # 🧹 Nettoyage des fichiers objets
 clean:
-	rm -rf $(BIN_DIR)
 	rm -rf $(OBJ_DIR)
 	if [ -d $(LIBFT_DIR) ]; then make -C $(LIBFT_DIR) clean; fi
 	@echo "🗑️  Cleaned object files."
