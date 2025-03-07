@@ -12,7 +12,7 @@
  * @param delimiter Délimiteur pour heredoc (si applicable).
  * @return t_node_ast* Retourne un pointeur vers le nœud créé.
  */
-t_node_ast	*create_ast_node(t_node_type type, char **args
+t_node_ast	*create_ast_node(t_node_type type, char **args,
 				char *filepath, char *delimiter);
 
 /**

@@ -31,8 +31,15 @@ void	sigint_handler(int sig, siginfo_t *info, void *context);
  * @brief Gestionnaire pour SIGQUIT (CTRL + \).
  *
  * @param sig Numéro du signal reçu.
+ * @param info Informations sur le signal.
+ * @param context Contexte du signal.
  */
-void	sigquit_handler(int sig);
+void	sigquit_handler(int sig, siginfo_t *info, void *context);
+
+/**
+ * @brief Configure les signaux pour le shell interactif.
+ */
+void	set_signal(void);
 
 /**
  * @brief Initialise les valeurs par défaut de la structure t_app.

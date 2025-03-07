@@ -16,16 +16,16 @@ void	sigint_handler(int sig, siginfo_t *info, void *context)
 	}
 }
 
-void	sigquit_handler(int sig)
+void	sigquit_handler(int sig, siginfo_t *info, void *context)
 {
 	(void)sig;
+	(void)context;
+	if (info->si_pid == 0)
+		write(STDOUT_FILENO, "\n", 1);
 	rl_redisplay();
 }
 
-/**
- * @brief Configure les signaux pour le shell interactif.
- */
-static void	set_signal(void)
+void	set_signal(void)
 {
 	struct sigaction	sa_int;
 	struct sigaction	sa_quit;
@@ -34,7 +34,7 @@ static void	set_signal(void)
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = SA_SIGINFO;
 	sigaction(SIGINT, &sa_int, NULL);
-	sa_quit.sa_handler = sigquit_handler;
+	sa_quit.sa_sigaction = sigquit_handler;
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = SA_RESTART;
 	sigaction(SIGQUIT, &sa_quit, NULL);

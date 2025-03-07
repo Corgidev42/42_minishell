@@ -87,10 +87,7 @@ void	handle_heredoc(char **input, char *delimiter)
 void	handle_history(t_app *app, char *input)
 {
 	if (ft_strcmp(input, "history -c") == 0)
-	{
 		rl_clear_history();
-		ft_printf("Historique effacé !\n");
-	}
 	else if (!app->last_input || ft_strcmp(input, app->last_input))
 	{
 		free(app->last_input);

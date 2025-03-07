@@ -8,7 +8,7 @@ int	exec_exit(t_app *app, t_node_ast *current_node)
 	if (current_node->args[1])
 		exit_code = ft_atoi(current_node->args[1]);
 	clean_ast(current_node);
-	printf("Exiting minishell with code %d\n", exit_code);
+	ft_printf("Exiting minishell with code %d\n", exit_code);
 	exit(exit_code);
 	return (0);
 }

@@ -8,7 +8,7 @@ void	process_tokenize(t_app *app,
 	ptr = input;
 	while (*ptr)
 	{
-		if (!hp->in_single_quote && !hp->in_double_quote && isspace(*ptr))
+		if (!hp->in_single_quote && !hp->in_double_quote && (*ptr == ' ' || *ptr == '\t'))
 		{
 			if (hp->buf_index > 0)
 			{
