@@ -1,38 +1,5 @@
 #include "minishell.h"
 
-char	*ft_strndup(const char *s, size_t n)
-{
-	char	*str;
-	size_t	i;
-
-	str = (char *)malloc(sizeof(char) * (n + 1));
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (i < n)
-	{
-		str[i] = s[i];
-		i++;
-	}
-	str[i] = '\0';
-	return (str);
-}
-
-char	*ft_strncpy(char *dst, const char *src, size_t len)
-{
-	size_t	i;
-
-	i = 0;
-	while (src[i] && i < len)
-	{
-		dst[i] = src[i];
-		i++;
-	}
-	while (i < len)
-		dst[i++] = '\0';
-	return (dst);
-}
-
 char	*minishell_getenv(t_app *app, char *str)
 {
 	int	i;
