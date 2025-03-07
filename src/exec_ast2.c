@@ -6,6 +6,7 @@ char	**get_paths_from_env(t_app *app)
 	char	*path;
 	char	**paths;
 
+	paths = NULL;
 	path = NULL;
 	i = 0;
 	while (app->envp[i])
@@ -17,9 +18,11 @@ char	**get_paths_from_env(t_app *app)
 		}
 		i++;
 	}
-	paths = ft_split(path, ':');
 	if (path)
+	{
+		paths = ft_split(path, ':');
 		free(path);
+	}
 	return (paths);
 }
 
