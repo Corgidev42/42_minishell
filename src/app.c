@@ -20,6 +20,7 @@ void	sigquit_handler(int sig, siginfo_t *info, void *context)
 {
 	(void)sig;
 	(void)context;
+	(void)info;
 	if (info->si_pid == 0)
 		write(STDOUT_FILENO, "\n", 1);
 	rl_redisplay();
@@ -36,7 +37,7 @@ void	set_signal(void)
 	sigaction(SIGINT, &sa_int, NULL);
 	sa_quit.sa_sigaction = sigquit_handler;
 	sigemptyset(&sa_quit.sa_mask);
-	sa_quit.sa_flags = SA_RESTART;
+	sa_quit.sa_flags = SA_SIGINFO;
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
