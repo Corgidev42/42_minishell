@@ -30,7 +30,20 @@ INCLUDE_DIR = include
 INCLUDES = -I$(INCLUDE_DIR) $(LIBFT_INCLUDE)
 
 # 🔍 Trouver tous les fichiers source (.c)
-SRC_FILES = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/*/*.c)
+# SRC_FILES = $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/*/*.c)
+SRC_FILES =	$(SRC_DIR)/app.c \
+			$(SRC_DIR)/built_in_bis.c \
+			$(SRC_DIR)/built_in.c \
+			$(SRC_DIR)/exec_ast.c \
+			$(SRC_DIR)/exec_ast1.c \
+			$(SRC_DIR)/exec_ast2.c \
+			$(SRC_DIR)/input.c \
+			$(SRC_DIR)/main.c \
+			$(SRC_DIR)/minishell.c \
+			$(SRC_DIR)/prepare_ast.c \
+			$(SRC_DIR)/tokenizer.c \
+			$(SRC_DIR)/tokenizer1.c \
+			$(SRC_DIR)/utils.c \
 
 # 🏗️ Création de la liste des fichiers objets correspondants
 OBJ_FILES = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
