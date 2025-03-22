@@ -36,7 +36,9 @@ t_node_ast	*create_ast_node_from_operator(t_app *app,
 
 	if (ft_strcmp(app->tokenizer.tokens[op_index], "|") == 0)
 		node = create_ast_node(NODE_PIPE, NULL, NULL, NULL);
-	else if (ft_strcmp(app->tokenizer.tokens[op_index], ">") == 0)
+	if (!app->tokenizer.tokens[op_index + 1])
+		return (NULL);
+	if (ft_strcmp(app->tokenizer.tokens[op_index], ">") == 0)
 		node = create_ast_node(NODE_R_OUTPUT, NULL,
 				ft_strdup(app->tokenizer.tokens[op_index + 1]), NULL);
 	else if (ft_strcmp(app->tokenizer.tokens[op_index], ">>") == 0)

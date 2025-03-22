@@ -69,7 +69,7 @@ void	ast_command(t_app *app, t_node_ast *current_node)
 		execve(search_file(app, current_node->args[0]),
 			current_node->args, app->envp);
 		perror("minishell");
-		exit(1);
+		exit(127);
 	}
 	if (app->fd[0] != STDIN_FILENO)
 		close(app->fd[0]);
