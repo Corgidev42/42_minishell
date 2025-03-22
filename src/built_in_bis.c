@@ -98,39 +98,3 @@ int	exec_export(t_app *app, t_node_ast *ast)
 		i++;
 	return (update_envp(app, ast->args[1], i));
 }
-
-// int	exec_export(t_app *app, t_node_ast *ast)
-// {
-// 	int	i;
-// 	int	len_to_equal;
-
-// 	if (ft_strchr(ast->args[1], '=') == NULL)
-// 	{
-// 		ft_putstr_fd("export: not a valid identifier\n", STDERR_FILENO);
-// 		return (1);
-// 	}
-// 	len_to_equal = ft_strchr(ast->args[1], '=') - ast->args[1];
-// 	i = 0;
-// 	while (app->envp[i]
-// 		&& (ft_strncmp(ast->args[1], app->envp[i], len_to_equal) != 0
-// 			|| app->envp[i][len_to_equal] != '='))
-// 		i++;
-// 	if (app->envp[i] == NULL)
-// 	{
-// 		app->envp = ft_realloc(app->envp, sizeof(char *) * (i + 2));
-// 		if (app->envp == NULL)
-// 			return (1);
-// 		app->envp[i] = ft_strdup(ast->args[1]);
-// 		if (app->envp[i] == NULL)
-// 			return (1);
-// 		app->envp[i + 1] = NULL;
-// 	}
-// 	else
-// 	{
-// 		free(app->envp[i]);
-// 		app->envp[i] = ft_strdup(ast->args[1]);
-// 		if (app->envp[i] == NULL)
-// 			return (1);
-// 	}
-// 	return (0);
-// }

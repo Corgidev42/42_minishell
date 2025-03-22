@@ -36,7 +36,6 @@ int	exec_echo(t_app *app, t_node_ast *ast)
 	return (0);
 }
 
-// Fonction cd with no options
 int	exec_cd(t_app *app, t_node_ast *ast)
 {
 	(void)app;
@@ -58,7 +57,6 @@ int	exec_cd(t_app *app, t_node_ast *ast)
 	return (0);
 }
 
-// Fonction pwd with no options
 int	exec_pwd(t_app *app, t_node_ast *ast)
 {
 	char	cwd[128];
