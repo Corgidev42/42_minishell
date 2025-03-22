@@ -1,62 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   input.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ezeppa <ezeppa@student.42.fr>              #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-03-22 15:24:03 by ezeppa            #+#    #+#             */
+/*   Updated: 2025-03-22 15:24:03 by ezeppa           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-
-// char *read_input(t_app *app, char **input, char *delimiter)
-// {
-// 	char *line;
-// 	char *temp;
-// 	int stdin_backup;
-
-// 	if (app->is_heredoc == 1 && delimiter)
-// 	{
-// 		*input = ft_strdup("");
-// 		stdin_backup = dup(STDIN_FILENO);
-// 		app->is_heredoc = 1;
-// 		while (1)
-// 		{
-// 			line = readline("heredoc>");
-// 			if (!line)
-// 				break ;
-// 			if (ft_strcmp(line, delimiter) == 0)
-// 			{
-// 				free(line);
-// 				break;
-// 			}
-// 			temp = *input;
-// 			*input = ft_strjoin(temp, line);
-// 			free(temp);
-// 			temp = *input;
-// 			*input = ft_strjoin(temp, "\n");
-// 			free(temp);
-// 			free(line);
-// 		}
-// 		app->is_heredoc = 0;
-// 		dup2(stdin_backup, STDIN_FILENO);
-// 		close(stdin_backup);
-// 	}
-// 	else
-// 	{
-// 		*input = readline("minishell> ");
-// 		if (!*input)
-// 		{
-// 			app->running = 0;
-// 			return NULL;
-// 		}
-// 		if (*input && (!app->last_input ||
-// 		(ft_strcmp(*input, app->last_input) != 0)))
-// 		{
-// 			if (app->last_input)
-// 				free(app->last_input);
-// 			app->last_input = ft_strdup(*input);
-// 			add_history(*input);
-// 		}
-// 		if (ft_strcmp(*input,"history -c") == 0)
-// 		{
-// 			rl_clear_history();
-// 			ft_printf("Historique effacé !\n");
-// 		}
-// 	}
-// 	return *input;
-// }
 
 void	handle_heredoc(char **input, char *delimiter)
 {

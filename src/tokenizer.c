@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ezeppa <ezeppa@student.42.fr>              #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-03-22 15:25:00 by ezeppa            #+#    #+#             */
+/*   Updated: 2025-03-22 15:25:00 by ezeppa           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	process_tokenize(t_app *app,
@@ -8,7 +20,8 @@ void	process_tokenize(t_app *app,
 	ptr = input;
 	while (*ptr)
 	{
-		if (!hp->in_single_quote && !hp->in_double_quote && (*ptr == ' ' || *ptr == '\t'))
+		if (!hp->in_single_quote && !hp->in_double_quote
+			&& (*ptr == ' ' || *ptr == '\t'))
 		{
 			if (hp->buf_index > 0)
 			{
