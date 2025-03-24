@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   app.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezeppa <ezeppa@student.42.fr>              #+#  +:+       +#+        */
+/*   By: ezeppa <ezeppa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-03-22 15:25:31 by ezeppa            #+#    #+#             */
-/*   Updated: 2025-03-22 15:25:31 by ezeppa           ###   ########.fr       */
+/*   Created: 2025/03/22 15:25:31 by ezeppa            #+#    #+#             */
+/*   Updated: 2025/03/24 11:10:04 by ezeppa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 struct	s_app
 {
+	pid_t			current_pid;
 	char			**envp;
 	int				running;
 	int				is_heredoc;
@@ -24,7 +25,6 @@ struct	s_app
 	int				status;
 	int				dquote;
 	int				fd[2];
-	int				pid_current;
 	char			*last_input;
 	t_node_ast		*first_node;
 	t_tokenizer		tokenizer;
@@ -34,19 +34,15 @@ struct	s_app
  * @brief Gestionnaire pour SIGINT (CTRL + C).
  *
  * @param sig Numéro du signal reçu.
- * @param info Informations sur le signal.
- * @param context Contexte du signal.
  */
-void	sigint_handler(int sig, siginfo_t *info, void *context);
+void	sigint_handler(int sig);
 
 /**
  * @brief Gestionnaire pour SIGQUIT (CTRL + \).
  *
  * @param sig Numéro du signal reçu.
- * @param info Informations sur le signal.
- * @param context Contexte du signal.
  */
-void	sigquit_handler(int sig, siginfo_t *info, void *context);
+void	sigquit_handler(int sig);
 
 /**
  * @brief Configure les signaux pour le shell interactif.

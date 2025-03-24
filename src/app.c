@@ -3,54 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   app.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ezeppa <ezeppa@student.42.fr>              #+#  +:+       +#+        */
+/*   By: ezeppa <ezeppa@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-03-22 15:19:25 by ezeppa            #+#    #+#             */
-/*   Updated: 2025-03-22 15:19:25 by ezeppa           ###   ########.fr       */
+/*   Created: 2025/03/22 15:19:25 by ezeppa            #+#    #+#             */
+/*   Updated: 2025/03/24 11:13:45 by ezeppa           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <stdlib.h>
 
-void	sigint_handler(int sig, siginfo_t *info, void *context)
+void	sigint_handler(int sig)
 {
 	(void)sig;
-	(void)context;
-	if (info->si_pid == 0)
-		write(STDOUT_FILENO, "\n", 1);
-	else
+	write(STDOUT_FILENO, "\n", 1);
+	if (g_app(NULL)->current_pid != 0)
 	{
-		write(STDOUT_FILENO, "\n", 1);
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		rl_redisplay();
+		g_app(NULL)->status = 130;
 	}
 }
 
-void	sigquit_handler(int sig, siginfo_t *info, void *context)
+void	sigquit_handler(int sig)
 {
 	(void)sig;
-	(void)context;
-	(void)info;
-	if (info->si_pid == 0)
-		write(STDOUT_FILENO, "\n", 1);
+	if (g_app(NULL)->current_pid == 0)
+		write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
 	rl_redisplay();
 }
 
 void	set_signal(void)
 {
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
-
-	sa_int.sa_sigaction = sigint_handler;
-	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = SA_SIGINFO;
-	sigaction(SIGINT, &sa_int, NULL);
-	sa_quit.sa_sigaction = sigquit_handler;
-	sigemptyset(&sa_quit.sa_mask);
-	sa_quit.sa_flags = SA_SIGINFO;
-	sigaction(SIGQUIT, &sa_quit, NULL);
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, sigquit_handler);
 }
 
 void	init_brut(t_app *app)
@@ -62,7 +49,6 @@ void	init_brut(t_app *app)
 	app->dquote = 1;
 	app->fd[0] = STDIN_FILENO;
 	app->fd[1] = STDOUT_FILENO;
-	app->pid_current = getpid();
 	app->last_input = NULL;
 	app->first_node = NULL;
 	app->tokenizer.tokens = NULL;
@@ -89,6 +75,7 @@ int	init_app(t_app *app, char **envp)
 		i++;
 	}
 	app->envp[i] = NULL;
+	app->current_pid = getpid();
 	set_signal();
 	return (0);
 }
