@@ -31,6 +31,8 @@ void	sigquit_handler(int sig)
 	(void)sig;
 	if (g_app(NULL)->current_pid == 0)
 		write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+	else
+		rl_on_new_line();
 	rl_redisplay();
 }
 
